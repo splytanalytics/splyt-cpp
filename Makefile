@@ -1,12 +1,12 @@
-SRC = src/*.cpp
+SRC = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 INCLUDE = include/
+OBJECTS = $(addprefix bin/,$(notdir $(SRC:.cpp=.o)))
 
-all: $(DRIVER_INC) $(DRIVER_SRC)
-	gcc -fPIC -c -I $(INCLUDE) -o lib/splyt.o $(SRC)
-	#gcc -shared -o lib/splyt.so lib/splyt.o
+all: $(SRC)
+	g++ -fPIC -shared -I $(INCLUDE) $^ -o lib/splyt.so
 
-test: all test/test.cpp
-	gcc -I $(INCLUDE) -l:lib/splyt.o test/test.cpp -o bin/test.o
+tests: all tests/test.cpp
+	g++ -I $(INCLUDE) tests/test.cpp -o bin/test.o -l:lib/splyt.so
 	./bin/test.o
 
 clean:

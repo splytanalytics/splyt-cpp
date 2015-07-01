@@ -4,6 +4,8 @@
 
 int main ()
 {
+    printf("Starting test.\n");
+
     splyt::Init();
 
     return 0;

@@ -1,5 +1,6 @@
 #include <stddef.h>
 
-namespace splyt {
+namespace splyt
+{
     extern void Init();
 }

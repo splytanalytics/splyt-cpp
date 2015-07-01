@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "splyt.h"
+#include "network/network.h"
 
 namespace splyt
 {
@@ -10,6 +11,8 @@ namespace splyt
         functions provided in the SDK.
     */
     void Init() {
-        printf("Splyt init.");
+        printf("Splyt init.\n");
+
+        Network::Init();
     }
 }
