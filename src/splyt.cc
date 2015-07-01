@@ -10,9 +10,9 @@ namespace splyt
         This must be called first to use any
         functions provided in the SDK.
     */
-    void Init() {
+    void Init(HttpInterface& httpint) {
         printf("Splyt init.\n");
 
-        Network::Init();
+        Network::Init(httpint);
     }
 }

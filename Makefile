@@ -6,7 +6,7 @@ all: $(SRC)
 	g++ -fPIC -shared -I $(INCLUDE) $^ -o lib/splyt.so
 
 tests: all tests/test.cc
-	g++ -I $(INCLUDE) tests/test.cc -o bin/test.o -l:lib/splyt.so
+	g++ -I $(INCLUDE) tests/test.cc -o bin/test.o -l:lib/splyt.so -lcurl
 	./bin/test.o
 
 clean:
