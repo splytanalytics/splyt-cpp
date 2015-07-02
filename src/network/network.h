@@ -7,9 +7,9 @@
 
 namespace splyt
 {
-    const std::string network_host = "https://data.splyt.com";
-    const std::string network_sdkname = "cpp";
-    const std::string network_sdkversion = "4.0";
+    const std::string kNetworkHost = "https://data.splyt.com";
+    const std::string kNetworkSdk = "cpp";
+    const std::string kNetworkVersion = "4.0.6";
 
     class Network
     {
@@ -18,7 +18,7 @@ namespace splyt
 
         public:
             static void Init(HttpInterface& httpint);
-            static void Call(std::string path);
+            static void Call(std::string path, std::string content);
     };
 }
 #endif  // NETWORK_H_
