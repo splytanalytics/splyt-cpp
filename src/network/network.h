@@ -18,7 +18,7 @@ namespace splyt
 
         public:
             static void Init(HttpInterface& httpint);
-            static void Call(std::string path, std::string content);
+            static void Call(std::string path, std::string content, NetworkCallback callback);
     };
 }
 #endif  // NETWORK_H_

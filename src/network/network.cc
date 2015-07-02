@@ -20,7 +20,7 @@ namespace splyt
         @param sub_path - The path for the API call.
         @param content - Content sent to Splyt.
     */
-    void Network::Call(std::string sub_path, std::string content)
+    void Network::Call(std::string sub_path, std::string content, NetworkCallback callback)
     {
         if(!Network::httpint) {
             Log::Error("No HTTP implementation available. Did you call splyt::Init()?");
@@ -47,5 +47,7 @@ namespace splyt
         };
 
         Network::httpint->Post(kNetworkHost, path + query, content);
+
+        callback(1);
     }
 }

@@ -27,6 +27,8 @@ namespace splyt
             virtual void Post(std::string url, std::string path, std::string content) {}
     };
 
+    typedef void (*NetworkCallback)(int);
+
     extern std::string customer_id;
     extern std::string user_id;
     extern std::string device_id;
