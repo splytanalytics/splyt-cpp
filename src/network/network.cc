@@ -1,7 +1,6 @@
 #include <stdexcept>
 
 #include "network/network.h"
-#include "util/log.h"
 
 namespace splyt
 {
@@ -28,7 +27,7 @@ namespace splyt
         NetworkResponse resp = Network::Call("application_init", json);
 
         if (resp.IsSuccessful()) {
-            Log::Info("Success:\n" + resp.GetContent().toStyledString());
+            //Log::Info("Success:\n" + resp.GetContent().toStyledString());
         } else {
             throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
         }
@@ -39,6 +38,8 @@ namespace splyt
         @param std::string sub_path - The path for the API call.
         @param Json::Value content - JSON content sent to Splyt.
         @param NetworkCallback callback - Optional callback for async calls.
+
+        @return NetworkResponse - Object that contains error data or the JSON content.
     */
     NetworkResponse Network::Call(std::string sub_path, Json::Value content, NetworkCallback callback)
     {

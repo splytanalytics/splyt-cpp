@@ -9,6 +9,8 @@
 #include <string>
 #include <json/json.h>
 
+#include "util/log.h"
+
 namespace splyt
 {
     typedef enum Error {
@@ -29,16 +31,21 @@ namespace splyt
             virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content) {}
     };
 
+    extern bool initialized;
     extern std::string customer_id;
     extern std::string user_id;
     extern std::string device_id;
 
     extern void Init(HttpInterface& httpint, std::string customer_id, std::string user_id, std::string device_id);
 
-    static std::string GetTimestampStr() {
+    static std::string GetTimestampStr()
+    {
         std::stringstream strm;
         strm << (std::time(0) * 1000);
         return strm.str();
     }
+
+    extern Json::Value BeginTransaction(std::string user_id, std::string device_id, std::string category, std::string timeout_mode, int timeout, std::string transaction_id, Json::Value properties);
+    extern Json::Value EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, Json::Value properties);
 }
 #endif  // SPLYT_H_

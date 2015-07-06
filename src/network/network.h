@@ -31,6 +31,7 @@ namespace splyt
 
             void SetContent(Json::Value c) {
                 content = c;
+                Log::Info(c.toStyledString());
             }
 
             bool IsSuccessful() {

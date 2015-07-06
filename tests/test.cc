@@ -1,7 +1,6 @@
 #include <curl/curl.h>
 #include <stdio.h>
 #include <string>
-#include <json/json.h>
 
 #include "splyt.h"
 #include "util/log.h"
@@ -9,9 +8,8 @@
 
 namespace test
 {
-    /* Extends HttpInterface to allow the SDK to make HTTP calls with CURL
-       for Linux.
-
+    /* Extends HttpInterface to allow the SDK to make HTTP calls
+       with CURL for Linux.
     */
     class CurlHttpInterface : public splyt::HttpInterface
     {
@@ -37,7 +35,7 @@ namespace test
                 if (curl) {
                     //Construct URL.
                     std::string full_url = url + path;
-                    //splyt::Log::Info(full_url);
+                    splyt::Log::Info(full_url);
                     //splyt::Log::Info(content);
 
                     //Construct headers.
@@ -54,14 +52,17 @@ namespace test
                     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, content.c_str());
                     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_string);
                     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+                    //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1); //CURL verbose debug.
 
                     res = curl_easy_perform(curl);
 
                     if (res != CURLE_OK) {
+                        splyt::Log::Error("CURL ERROR");
                         splyt::Log::Error(curl_easy_strerror(res));
                     }
 
-                    curl_easy_cleanup(curl);
+                    //curl_easy_cleanup(curl);
+                    curl_slist_free_all(headerchunk);
 
                     return response;
                 }
@@ -81,8 +82,9 @@ int main ()
     test::CurlHttpInterface httpint;
     splyt::Init(httpint, "knetik-bubblepop-test", "testuser", "");
 
-    std::string json = "[1435865035.85,1435865035.85,1435865035593,\"964cb8b8e445dc05a4f8421b0a13d24c\",\"session\",\"ANY\",3600,null,{}]";
+    Json::Value properties;
+    splyt::BeginTransaction("testuser", "", "test_cat", "ANY", 3600, "", properties);
 
-    //splyt::Network::Call("datacollector_beginTransaction", json, &SplytCallback);
+    splyt::EndTransaction("testuser", "", "test_cat", "success", "", properties);
     return 0;
 }
