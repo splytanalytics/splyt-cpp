@@ -5,7 +5,9 @@
 #define SPLYT_QPARM_OUTPUT "ssf_output=json"
 
 #include <stddef.h>
+#include <ctime>
 #include <string>
+#include <json/json.h>
 
 namespace splyt
 {
@@ -24,15 +26,19 @@ namespace splyt
     {
         public:
             virtual ~HttpInterface() {}
-            virtual void Post(std::string url, std::string path, std::string content) {}
+            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content) {}
     };
-
-    typedef void (*NetworkCallback)(int);
 
     extern std::string customer_id;
     extern std::string user_id;
     extern std::string device_id;
 
     extern void Init(HttpInterface& httpint, std::string customer_id, std::string user_id, std::string device_id);
+
+    static std::string GetTimestampStr() {
+        std::stringstream strm;
+        strm << (std::time(0) * 1000);
+        return strm.str();
+    }
 }
 #endif  // SPLYT_H_

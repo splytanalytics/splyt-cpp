@@ -1,12 +1,12 @@
-SRC = $(wildcard src/*.cc) $(wildcard src/*/*.cc)
-INCLUDE = src/
+SRC = $(wildcard src/*.cc) $(wildcard src/*/*.cc) $(wildcard vendor/*/*.cc) $(wildcard vendor/*/*.cpp)
+INCLUDE = -I src/ -I vendor/jsoncpp
 OBJECTS = $(addprefix bin/,$(notdir $(SRC:.cc=.o)))
 
 all: $(SRC)
-	g++ -fPIC -shared -I $(INCLUDE) $^ -o lib/splyt.so
+	g++ -fPIC -shared $(INCLUDE) $^ -o lib/splyt.so
 
 tests: all tests/test.cc
-	g++ -I $(INCLUDE) tests/test.cc -o bin/test.o -l:lib/splyt.so -lcurl
+	g++ $(INCLUDE) tests/test.cc -o bin/test.o -l:lib/splyt.so -lcurl
 	./bin/test.o
 
 clean:
