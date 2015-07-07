@@ -4,7 +4,7 @@ OBJECTS = $(addprefix bin/,$(notdir $(SRC:.cc=.o)))
 LIB_PATH = $(shell pwd)/lib
 
 all: $(SRC)
-	g++ -fPIC -shared $(INCLUDE) $^ -o lib/libsplyt.so
+	g++ -std=c++0x -fPIC -shared $(INCLUDE) $^ -o lib/libsplyt.so
 
 tests: all tests/test.cc
 	g++ $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt -lcurl

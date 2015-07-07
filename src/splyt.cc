@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "splyt.h"
+
 #include "network/network.h"
 
 namespace splyt
@@ -35,7 +36,20 @@ namespace splyt
         splyt::initialized = true;
     }
 
-    Json::Value NewUser(std::string user_id)
+    Json::Value HandleResponse(std::string type, NetworkResponse resp, NetworkCallback callback)
+    {
+        if(callback != NULL) {
+            return Json::Value::null;
+        }
+
+        if (!resp.IsSuccessful()) {
+            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
+        }
+
+        return resp.GetContent()[type]["data"];
+    }
+
+    Json::Value NewUser(std::string user_id, NetworkCallback callback)
     {
         Json::Value json;
 
@@ -45,15 +59,11 @@ namespace splyt
         json.append(user_id);
         json.append(Json::Value::null);
 
-        NetworkResponse resp = Network::Call("datacollector_newUser", json);
-        if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-        }
-
-        return resp.GetContent()["datacollector_newUser"]["data"];
+        NetworkResponse resp = Network::Call("datacollector_newUser", json, callback);
+        return HandleResponse("datacollector_newUser", resp, callback);
     }
 
-    Json::Value NewDevice(std::string device_id)
+    Json::Value NewDevice(std::string device_id, NetworkCallback callback)
     {
         Json::Value json;
 
@@ -63,15 +73,11 @@ namespace splyt
         json.append(Json::Value::null);
         json.append(device_id);
 
-        NetworkResponse resp = Network::Call("datacollector_newDevice", json);
-        if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-        }
-
-        return resp.GetContent()["datacollector_newDevice"]["data"];
+        NetworkResponse resp = Network::Call("datacollector_newDevice", json, callback);
+        return HandleResponse("datacollector_newDevice", resp, callback);
     }
 
-    Json::Value NewUserChecked(std::string user_id)
+    Json::Value NewUserChecked(std::string user_id, NetworkCallback callback)
     {
         Json::Value json;
 
@@ -81,15 +87,11 @@ namespace splyt
         json.append(user_id);
         json.append(Json::Value::null);
 
-        NetworkResponse resp = Network::Call("datacollector_newUserChecked", json);
-        if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-        }
-
-        return resp.GetContent()["datacollector_newUserChecked"]["data"];
+        NetworkResponse resp = Network::Call("datacollector_newUserChecked", json, callback);
+        return HandleResponse("datacollector_newUserChecked", resp, callback);
     }
 
-    Json::Value NewDeviceChecked(std::string device_id)
+    Json::Value NewDeviceChecked(std::string device_id, NetworkCallback callback)
     {
         Json::Value json;
 
@@ -99,15 +101,11 @@ namespace splyt
         json.append(Json::Value::null);
         json.append(device_id);
 
-        NetworkResponse resp = Network::Call("datacollector_newDeviceChecked", json);
-        if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-        }
-
-        return resp.GetContent()["datacollector_newDeviceChecked"]["data"];
+        NetworkResponse resp = Network::Call("datacollector_newDeviceChecked", json, callback);
+        return HandleResponse("datacollector_newDeviceChecked", resp, callback);
     }
 
-    Json::Value BeginTransaction(std::string user_id, std::string device_id, std::string category, int timeout, std::string transaction_id, Json::Value properties)
+    Json::Value BeginTransaction(std::string user_id, std::string device_id, std::string category, int timeout, std::string transaction_id, Json::Value properties, NetworkCallback callback)
     {
         Json::Value json;
 
@@ -122,15 +120,11 @@ namespace splyt
         json.append(transaction_id);
         json.append(properties);
 
-        NetworkResponse resp = Network::Call("datacollector_beginTransaction", json);
-        if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-        }
-
-        return resp.GetContent()["datacollector_beginTransaction"]["data"];
+        NetworkResponse resp = Network::Call("datacollector_beginTransaction", json, callback);
+        return HandleResponse("datacollector_beginTransaction", resp, callback);
     }
 
-    Json::Value UpdateTransaction(std::string user_id, std::string device_id, std::string category, int progress, std::string transaction_id, Json::Value properties)
+    Json::Value UpdateTransaction(std::string user_id, std::string device_id, std::string category, int progress, std::string transaction_id, Json::Value properties, NetworkCallback callback)
     {
         Json::Value json;
 
@@ -144,15 +138,11 @@ namespace splyt
         json.append(transaction_id);
         json.append(properties);
 
-        NetworkResponse resp = Network::Call("datacollector_updateTransaction", json);
-        if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-        }
-
-        return resp.GetContent()["datacollector_updateTransaction"]["data"];
+        NetworkResponse resp = Network::Call("datacollector_updateTransaction", json, callback);
+        return HandleResponse("datacollector_updateTransaction", resp, callback);
     }
 
-    Json::Value EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, Json::Value properties)
+    Json::Value EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, Json::Value properties, NetworkCallback callback)
     {
         Json::Value json;
 
@@ -166,11 +156,7 @@ namespace splyt
         json.append(transaction_id);
         json.append(properties);
 
-        NetworkResponse resp = Network::Call("datacollector_endTransaction", json);
-        if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-        }
-
-        return resp.GetContent()["datacollector_endTransaction"]["data"];
+        NetworkResponse resp = Network::Call("datacollector_endTransaction", json, callback);
+        return HandleResponse("datacollector_endTransaction", resp, callback);
     }
 }

@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <thread>
 
 #include "network/network.h"
 
@@ -22,7 +23,7 @@ namespace splyt
         NetworkResponse resp = Network::Call("application_init", json);
 
         if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
+            //throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
         }
     }
 
@@ -32,6 +33,20 @@ namespace splyt
             throw std::runtime_error("No HTTP implementation available. Did you call splyt::Init()?");
         }
 
+        if(callback != NULL) {
+            std::thread http_thread (Network::PerformCall, sub_path, content, callback);
+            http_thread.detach();
+
+            NetworkResponse response(false);
+            response.SetErrorMessage("A callback was passed to this function.");
+            return response;
+        }
+
+        return Network::PerformCall(sub_path, content);
+    }
+
+    NetworkResponse Network::PerformCall(std::string sub_path, Json::Value content, NetworkCallback callback)
+    {
         std::string path = "/" + Config::kSsfApp + "/ws/interface/" + sub_path;
 
         //Build query string.
@@ -55,7 +70,17 @@ namespace splyt
 
         Json::FastWriter fast_writer;
         std::string str_response = Network::httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
+        NetworkResponse nresp = Network::ParseResponse(str_response);
 
+        if(callback != NULL) {
+            callback(nresp.GetContent()[sub_path]["data"]);
+        }
+
+        return nresp;
+    }
+
+    NetworkResponse Network::ParseResponse(std::string str_response)
+    {
         Json::Value root;
         Json::Reader reader;
         bool parsingSuccessful = reader.parse(str_response, root);
@@ -76,11 +101,7 @@ namespace splyt
                 response.SetContent(root["data"]);
             }
 
-            if (callback != NULL) {
-                callback(response);
-            } else {
-                return response;
-            }
+            return response;
 
             //Log::Info(root.get("error", -1).asString());
             //Log::Info(root["data"]["datacollector_beginTransaction"].get("description", "").asString());
@@ -93,10 +114,6 @@ namespace splyt
 
         NetworkResponse response(false);
         response.SetErrorMessage("Unknown error.");
-
-        if (callback != NULL) {
-            callback(response);
-        }
 
         return response;
     }

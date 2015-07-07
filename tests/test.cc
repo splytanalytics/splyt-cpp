@@ -13,16 +13,10 @@ namespace test
     */
     class CurlHttpInterface : public splyt::HttpInterface
     {
-        private:
-            CURL* curl;
-            CURLcode res;
-
         public:
             CurlHttpInterface()
             {
                 curl_global_init(CURL_GLOBAL_ALL);
-
-                curl = curl_easy_init();
             }
 
             static size_t write_to_string(void *ptr, size_t size, size_t count, void *stream) {
@@ -32,6 +26,10 @@ namespace test
 
             virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content)
             {
+                CURL* curl;
+                CURLcode res;
+                curl = curl_easy_init();
+
                 std::string response;
 
                 if (curl) {
@@ -62,7 +60,7 @@ namespace test
                         splyt::Log::Error(curl_easy_strerror(res));
                     }
 
-                    //curl_easy_cleanup(curl);
+                    curl_easy_cleanup(curl);
                     curl_slist_free_all(headerchunk);
                 }
 
@@ -71,9 +69,9 @@ namespace test
     };
 }
 
-void SplytCallback(Json::Value)
+void SplytCallback(Json::Value response)
 {
-    splyt::Log::Info("Callback tests.");
+    splyt::Log::Info("Callback test: " + response.toStyledString());
 }
 
 int main ()
@@ -83,7 +81,7 @@ int main ()
     test::CurlHttpInterface httpint;
     splyt::Init(httpint, "knetik-bubblepop-test", "testuser", "");
 
-    splyt::NewUserChecked("what");
+    splyt::NewUserChecked("testuser", SplytCallback);
 
     Json::Value properties;
     splyt::BeginTransaction("testuser,", "", "test_cat", 3600, "", properties);

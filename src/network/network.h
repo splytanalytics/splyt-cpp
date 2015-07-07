@@ -6,49 +6,16 @@
 #include <json/json.h>
 
 #include "splyt.h"
+#include "network/network_defs.h"
 
 namespace splyt
 {
-    class NetworkResponse
-    {
-        private:
-            bool success;
-            std::string error_message;
-            Json::Value content;
-
-        public:
-            NetworkResponse(bool s) {
-                success = s;
-            }
-
-            void SetErrorMessage(std::string err) {
-                error_message = err;
-            }
-
-            void SetContent(Json::Value c) {
-                content = c;
-            }
-
-            bool IsSuccessful() {
-                return success;
-            }
-
-            std::string GetErrorMessage() {
-                return error_message;
-            }
-
-            Json::Value GetContent() {
-                return content;
-            }
-    };
-
-    typedef void (*NetworkCallback)(NetworkResponse);
-
     class Network
     {
         private:
             static HttpInterface* httpint;
             static std::string InterpretError(int code);
+            static NetworkResponse PerformCall(std::string path, Json::Value content, NetworkCallback callback = NULL);
 
         public:
             /** Initialize the networking class used to make calls to the Splyt API and
@@ -67,6 +34,8 @@ namespace splyt
                 @return NetworkResponse - Object that contains error data or the JSON content.
             */
             static NetworkResponse Call(std::string path, Json::Value content, NetworkCallback callback = NULL);
+
+            static NetworkResponse ParseResponse(std::string str_response);
     };
 }
 #endif  // SPLYT_NETWORK_H_
