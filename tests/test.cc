@@ -32,6 +32,8 @@ namespace test
 
             virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content)
             {
+                std::string response;
+
                 if (curl) {
                     //Construct URL.
                     std::string full_url = url + path;
@@ -45,7 +47,6 @@ namespace test
                         headerchunk = curl_slist_append(headerchunk, headers[i].c_str());
                     }
 
-                    std::string response;
                     curl_easy_setopt(curl, CURLOPT_URL, full_url.c_str());
                     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerchunk);
                     curl_easy_setopt(curl, CURLOPT_POST, 1);
@@ -63,9 +64,9 @@ namespace test
 
                     //curl_easy_cleanup(curl);
                     curl_slist_free_all(headerchunk);
-
-                    return response;
                 }
+
+                return response;
             }
     };
 }

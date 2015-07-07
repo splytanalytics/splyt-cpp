@@ -96,9 +96,9 @@ namespace splyt
 
         if (callback != NULL) {
             callback(response);
-        } else {
-            return response;
         }
+
+        return response;
     }
 
     std::string Network::InterpretError(int code)
