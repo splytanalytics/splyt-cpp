@@ -4,7 +4,8 @@ namespace splyt
 {
     void Log::LogString(std::string s)
     {
-        std::cout << s + "\n";
+        std::string nstring = "[" + Log::CurrentDateTime() + "] " + s;
+        std::cout << nstring + "\n";
     }
 
     void Log::Info(std::string s)

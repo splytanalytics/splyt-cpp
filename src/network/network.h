@@ -1,5 +1,5 @@
-#ifndef NETWORK_H_
-#define NETWORK_H_
+#ifndef SPLYT_NETWORK_H_
+#define SPLYT_NETWORK_H_
 
 #include <stdio.h>
 #include <string>
@@ -9,10 +9,6 @@
 
 namespace splyt
 {
-    const std::string kNetworkHost = "https://data.splyt.com";
-    const std::string kNetworkSdk = "cpp";
-    const std::string kNetworkVersion = "4.0.6";
-
     class NetworkResponse
     {
         private:
@@ -31,7 +27,6 @@ namespace splyt
 
             void SetContent(Json::Value c) {
                 content = c;
-                Log::Info(c.toStyledString());
             }
 
             bool IsSuccessful() {
@@ -56,8 +51,22 @@ namespace splyt
             static std::string InterpretError(int code);
 
         public:
+            /** Initialize the networking class used to make calls to the Splyt API and
+                send the initial application_init request.
+
+                @param httpint - HttpInterface used for HTTP requests.
+            */
             static void Init(HttpInterface& httpint);
+
+            /** Make a call to the Splyt API.
+
+                @param std::string sub_path - The path for the API call.
+                @param Json::Value content - JSON content sent to Splyt.
+                @param NetworkCallback callback - Optional callback for async calls.
+
+                @return NetworkResponse - Object that contains error data or the JSON content.
+            */
             static NetworkResponse Call(std::string path, Json::Value content, NetworkCallback callback = NULL);
     };
 }
-#endif  // NETWORK_H_
+#endif  // SPLYT_NETWORK_H_

@@ -30,13 +30,13 @@ namespace test
                 return size*count;
             }
 
-            std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content)
+            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content)
             {
                 if (curl) {
                     //Construct URL.
                     std::string full_url = url + path;
                     splyt::Log::Info(full_url);
-                    //splyt::Log::Info(content);
+                    splyt::Log::Info(content);
 
                     //Construct headers.
                     struct curl_slist* headerchunk = NULL;
@@ -82,8 +82,12 @@ int main ()
     test::CurlHttpInterface httpint;
     splyt::Init(httpint, "knetik-bubblepop-test", "testuser", "");
 
+    splyt::NewUserChecked("what");
+
     Json::Value properties;
-    splyt::BeginTransaction("testuser", "", "test_cat", "ANY", 3600, "", properties);
+    splyt::BeginTransaction("testuser,", "", "test_cat", 3600, "", properties);
+
+    splyt::UpdateTransaction("testuer", "", "test_cat", 24, "", properties);
 
     splyt::EndTransaction("testuser", "", "test_cat", "success", "", properties);
     return 0;
