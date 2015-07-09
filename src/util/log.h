@@ -11,7 +11,7 @@ namespace splyt
     class Log
     {
         private:
-            static void LogString(std::string s);
+            static void LogString(std::string s, bool newline);
             static std::string CurrentDateTime() {
                 time_t     now = time(0);
                 struct tm  tstruct;
@@ -25,8 +25,8 @@ namespace splyt
             }
 
         public:
-            static void Info(std::string s);
-            static void Error(std::string s);
+            static void Info(std::string s, bool newline = true);
+            static void Error(std::string s, bool newline = true);
     };
 }
 #endif  // SPLYT_LOG_H_

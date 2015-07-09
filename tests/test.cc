@@ -4,6 +4,7 @@
 #include "splyt.h"
 #include "util/log.h"
 
+
 namespace test
 {
     void SplytCallback(splyt::SplytResponse response)
@@ -20,10 +21,18 @@ int main ()
 
     //splyt::NewUserChecked("testuser", test::SplytCallback);
 
-    splyt::Tuning::GetTuningVal("testvar", "testid", splyt::kEntityTypeUser);
-
     Json::Value properties;
-    //splyt::BeginTransaction("testuser,", "", "test_cat", 3600, "", properties);
+    splyt::BeginTransaction("testuser,", "", "test_cat", 3600, "", properties);
+
+    splyt::Tuning::RecordValue("testvar", "testuser", "", "newtestval");
+
+    splyt::Tuning::Refresh("testvar", "testuser");
+
+    splyt::Util::Sleep(1000);
+
+    splyt::Tuning::GetValue("testvar", "testuser", splyt::kEntityTypeUser);
+
+    splyt::Tuning::GetAllValues("testuser", splyt::kEntityTypeUser);
 
     //splyt::UpdateTransaction("testuer", "", "test_cat", 24, "", properties);
 

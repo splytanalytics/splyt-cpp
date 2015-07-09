@@ -1,6 +1,6 @@
 SRC = $(wildcard src/*.cc) $(wildcard src/*/*.cc) $(wildcard vendor/*/*.cc) $(wildcard vendor/*/*.cpp)
 INCLUDE = -I src/ -I vendor/jsoncpp
-PARAM = -std=c++11
+PARAM = -std=c++0x
 OBJECTS = $(addprefix bin/,$(notdir $(SRC:.cc=.o)))
 LIB_PATH = $(shell pwd)/lib
 

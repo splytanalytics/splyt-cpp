@@ -24,7 +24,7 @@ namespace splyt
             //Construct URL.
             std::string full_url = url + path;
             splyt::Log::Info(full_url);
-            splyt::Log::Info(content);
+            splyt::Log::Info("REQUEST: " + content, false);
 
             //Construct headers.
             struct curl_slist* headerchunk = NULL;
@@ -51,6 +51,8 @@ namespace splyt
             curl_easy_cleanup(curl);
             curl_slist_free_all(headerchunk);
         }
+
+        //Log::Info("RESPONSE: " + response);
 
         return response;
     }
