@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <stdexcept>
 #include <json/json.h>
 
 #include "splyt.h"
@@ -15,7 +16,8 @@ namespace splyt
         private:
             static HttpInterface* httpint;
             static std::string InterpretError(int code);
-            static NetworkResponse PerformCall(std::string path, Json::Value content, NetworkCallback callback = NULL);
+            static SplytResponse PerformCall(std::string path, Json::Value content, NetworkCallback callback = NULL);
+            static SplytResponse ParseResponse(std::string str_response);
 
         public:
             /** Initialize the networking class used to make calls to the Splyt API and
@@ -23,7 +25,7 @@ namespace splyt
 
                 @param httpint - HttpInterface used for HTTP requests.
             */
-            static void Init(HttpInterface& httpint);
+            static void Init(HttpInterface* httpint);
 
             /** Make a call to the Splyt API.
 
@@ -31,11 +33,9 @@ namespace splyt
                 @param Json::Value content - JSON content sent to Splyt.
                 @param NetworkCallback callback - Optional callback for async calls.
 
-                @return NetworkResponse - Object that contains error data or the JSON content.
+                @return SplytResponse - Object that contains error data or the JSON content.
             */
-            static NetworkResponse Call(std::string path, Json::Value content, NetworkCallback callback = NULL);
-
-            static NetworkResponse ParseResponse(std::string str_response);
+            static SplytResponse Call(std::string path, Json::Value content, NetworkCallback callback = NULL);
     };
 }
 #endif  // SPLYT_NETWORK_H_

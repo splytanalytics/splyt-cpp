@@ -1,4 +1,3 @@
-#include <stdexcept>
 #include <thread>
 
 #include "network/network.h"
@@ -7,37 +6,39 @@ namespace splyt
 {
     HttpInterface* Network::httpint;
 
-    void Network::Init(HttpInterface& httpint)
+    void Network::Init(HttpInterface* httpint)
     {
-        Network::httpint = &httpint;
+        Network::httpint = httpint;
         Log::Info("Network init.");
 
         Json::Value json;
-        json.append(GetTimestampStr());
-        json.append(GetTimestampStr());
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
         json.append(splyt::user_id);
         json.append(splyt::device_id);
         json.append("");
         json.append("");
 
-        NetworkResponse resp = Network::Call("application_init", json);
+        SplytResponse resp = Network::Call("application_init", json);
 
         if (!resp.IsSuccessful()) {
-            //throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
+            throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
         }
     }
 
-    NetworkResponse Network::Call(std::string sub_path, Json::Value content, NetworkCallback callback)
+    SplytResponse Network::Call(std::string sub_path, Json::Value content, NetworkCallback callback)
     {
         if(!Network::httpint) {
             throw std::runtime_error("No HTTP implementation available. Did you call splyt::Init()?");
         }
 
+        //If a callback has been passed, create a new thread to run it in and return a dummy response.
         if(callback != NULL) {
             std::thread http_thread (Network::PerformCall, sub_path, content, callback);
             http_thread.detach();
 
-            NetworkResponse response(false);
+            SplytResponse response(false);
             response.SetErrorMessage("A callback was passed to this function.");
             return response;
         }
@@ -45,7 +46,7 @@ namespace splyt
         return Network::PerformCall(sub_path, content);
     }
 
-    NetworkResponse Network::PerformCall(std::string sub_path, Json::Value content, NetworkCallback callback)
+    SplytResponse Network::PerformCall(std::string sub_path, Json::Value content, NetworkCallback callback)
     {
         std::string path = "/" + Config::kSsfApp + "/ws/interface/" + sub_path;
 
@@ -70,16 +71,17 @@ namespace splyt
 
         Json::FastWriter fast_writer;
         std::string str_response = Network::httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
-        NetworkResponse nresp = Network::ParseResponse(str_response);
+        SplytResponse nresp = Network::ParseResponse(str_response);
 
         if(callback != NULL) {
-            callback(nresp.GetContent()[sub_path]["data"]);
+            //callback(nresp.GetContent()[sub_path]["data"]);
+            callback(nresp);
         }
 
         return nresp;
     }
 
-    NetworkResponse Network::ParseResponse(std::string str_response)
+    SplytResponse Network::ParseResponse(std::string str_response)
     {
         Json::Value root;
         Json::Reader reader;
@@ -89,9 +91,9 @@ namespace splyt
             Log::Info(root.toStyledString());
 
             int error_code = root.get("error", -1).asInt();
-            bool success = (error_code == Error_Success);
+            bool success = (error_code == kErrorSuccess);
 
-            NetworkResponse response(success);
+            SplytResponse response(success);
 
             if (!success) {
                 std::string err = Network::InterpretError(error_code);
@@ -102,17 +104,14 @@ namespace splyt
             }
 
             return response;
-
-            //Log::Info(root.get("error", -1).asString());
-            //Log::Info(root["data"]["datacollector_beginTransaction"].get("description", "").asString());
         } else {
-            NetworkResponse response(false);
+            SplytResponse response(false);
             response.SetErrorMessage("Failed to parse JSON response.");
             return response;
             Log::Error("Failed to parse JSON response.");
         }
 
-        NetworkResponse response(false);
+        SplytResponse response(false);
         response.SetErrorMessage("Unknown error.");
 
         return response;
@@ -121,19 +120,19 @@ namespace splyt
     std::string Network::InterpretError(int code)
     {
         switch (code) {
-            case Error_Success:
+            case kErrorSuccess:
                 return "Success.";
-            case Error_Generic:
+            case kErrorGeneric:
                 return "Generic error.";
-            case Error_NotInitialized:
+            case kErrorNotInitialized:
                 return "Splyt not initialized.";
-            case Error_NotFound:
+            case kErrorNotFound:
                 return "Path not found.";
-            case Error_InvalidArgs:
+            case kErrorInvalidArgs:
                 return "Invalid arguments or invalid JSON format.";
-            case Error_MissingId:
+            case kErrorMissingId:
                 return "Missing ID.";
-            case Error_RequestTimedOut:
+            case kErrorRequestTimedOut:
                 return "Request timed out.";
         }
 

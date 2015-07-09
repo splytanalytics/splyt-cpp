@@ -6,30 +6,24 @@
 #include <string>
 #include <json/json.h>
 
+#include "util/util.h"
 #include "util/config.h"
 #include "util/log.h"
 #include "network/network_defs.h"
+#include "network/http_interfaces.h"
+#include "api/tuning.h"
 
 namespace splyt
 {
-    typedef enum Error {
-        Error_Success = 0,
-        Error_Generic = -1,
-        Error_NotInitialized = -2,
-        Error_NotFound = -3,
-        Error_InvalidArgs = -4,
-        Error_MissingId = -5,
-        Error_RequestTimedOut = -6,
-        Error_Unknown = -7
-    } Error;
-
-    class HttpInterface
-    {
-        protected:
-            HttpInterface(){}
-
-        public:
-            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content) = 0;
+    enum Error {
+        kErrorSuccess = 0,
+        kErrorGeneric = -1,
+        kErrorNotInitialized = -2,
+        kErrorNotFound = -3,
+        kErrorInvalidArgs = -4,
+        kErrorMissingId = -5,
+        kErrorRequestTimedOut = -6,
+        kErrorUnknown = -7
     };
 
     extern bool initialized;
@@ -41,63 +35,57 @@ namespace splyt
         This function must be called first to use any functions provided in the SDK.
 
         NOTE: user_id and device_id are optional, but you must at least pass one or the other.
-        @param HttpInterface httpint - HttpInterface used for HTTP requests.
         @param std::string customer_id - Customer ID provided by Splyt.
         @param std::string user_id
         @param std::string device_id
+        @param HttpInterface httpint - Optional HttpInterface used for HTTP requests. If one is not passed, it will use the default CurlHttpInterface.
 
         @throws std::runtime_error
     */
-    extern void Init(HttpInterface& httpint, std::string customer_id, std::string user_id, std::string device_id);
+    extern void Init(std::string customer_id, std::string user_id, std::string device_id);
+    extern void Init(std::string customer_id, std::string user_id, std::string device_id, HttpInterface* httpint);
 
-    static std::string GetTimestampStr()
-    {
-        std::stringstream strm;
-        strm << (std::time(0) * 1000);
-        return strm.str();
-    }
-
-    extern Json::Value HandleResponse(std::string type, NetworkResponse resp, NetworkCallback callback = NULL);
+    extern SplytResponse HandleResponse(std::string type, SplytResponse resp, NetworkCallback callback = NULL);
 
     /** Create a new user.
 
         @param std::string user_id
         @param NetworkCallback callback - If this callback is set, then this call will be done in its own thread and this function will return Json::Value::null.
 
-        @return Json::Value
+        @return SplytResponse
         @throws std::runtime_error
     */
-    extern Json::Value NewUser(std::string user_id, NetworkCallback callback = NULL);
+    extern SplytResponse NewUser(std::string user_id, NetworkCallback callback = NULL);
 
     /** Create a new device.
 
         @param std::string device_id
         @param NetworkCallback callback - If this callback is set, then this call will be done in its own thread and this function will return Json::Value::null.
 
-        @return Json::Value
+        @return SplytResponse
         @throws std::runtime_error
     */
-    extern Json::Value NewDevice(std::string device_id, NetworkCallback callback = NULL);
+    extern SplytResponse NewDevice(std::string device_id, NetworkCallback callback = NULL);
 
     /** Create a new user if it does not already exist.
 
         @param std::string user_id
         @param NetworkCallback callback - If this callback is set, then this call will be done in its own thread and this function will return Json::Value::null.
 
-        @return Json::Value
+        @return SplytResponse
         @throws std::runtime_error
     */
-    extern Json::Value NewUserChecked(std::string user_id, NetworkCallback callback = NULL);
+    extern SplytResponse NewUserChecked(std::string user_id, NetworkCallback callback = NULL);
 
     /** Create a new device if it does not already exist.
 
         @param std::string device_id
         @param NetworkCallback callback - If this callback is set, then this call will be done in its own thread and this function will return Json::Value::null.
 
-        @return Json::Value
+        @return SplytResponse
         @throws std::runtime_error
     */
-    extern Json::Value NewDeviceChecked(std::string device_id, NetworkCallback callback = NULL);
+    extern SplytResponse NewDeviceChecked(std::string device_id, NetworkCallback callback = NULL);
 
     /** Begin a new transaction.
 
@@ -110,10 +98,10 @@ namespace splyt
         @param Json::Value properties
         @param NetworkCallback callback - If this callback is set, then this call will be done in its own thread and this function will return Json::Value::null.
 
-        @return Json::Value
+        @return SplytResponse
         @throws std::runtime_error
     */
-    extern Json::Value BeginTransaction(std::string user_id, std::string device_id, std::string category, int timeout, std::string transaction_id, Json::Value properties, NetworkCallback callback = NULL);
+    extern SplytResponse BeginTransaction(std::string user_id, std::string device_id, std::string category, int timeout, std::string transaction_id, Json::Value properties, NetworkCallback callback = NULL);
 
     /** Update an existing transaction.
 
@@ -126,10 +114,10 @@ namespace splyt
         @param Json::Value properties
         @param NetworkCallback callback - If this callback is set, then this call will be done in its own thread and this function will return Json::Value::null.
 
-        @return Json::Value
+        @return SplytResponse
         @throws std::runtime_error
     */
-    extern Json::Value UpdateTransaction(std::string user_id, std::string device_id, std::string category, int progress, std::string transaction_id, Json::Value properties, NetworkCallback callback = NULL);
+    extern SplytResponse UpdateTransaction(std::string user_id, std::string device_id, std::string category, int progress, std::string transaction_id, Json::Value properties, NetworkCallback callback = NULL);
 
     /** End an existing transaction.
 
@@ -142,9 +130,9 @@ namespace splyt
         @param Json::Value properties
         @param NetworkCallback callback - If this callback is set, then this call will be done in its own thread and this function will return Json::Value::null.
 
-        @return Json::Value
+        @return SplytResponse
         @throws std::runtime_error
     */
-    extern Json::Value EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, Json::Value properties, NetworkCallback callback = NULL);
+    extern SplytResponse EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, Json::Value properties, NetworkCallback callback = NULL);
 }
 #endif  // SPLYT_H_

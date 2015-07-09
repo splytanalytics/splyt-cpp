@@ -3,7 +3,7 @@
 
 namespace splyt
 {
-    class NetworkResponse
+    class SplytResponse
     {
         private:
             bool success;
@@ -11,7 +11,7 @@ namespace splyt
             Json::Value content;
 
         public:
-            NetworkResponse(bool s) {
+            SplytResponse(bool s) {
                 success = s;
             }
 
@@ -36,6 +36,6 @@ namespace splyt
             }
     };
 
-    typedef void (*NetworkCallback)(Json::Value);
+    typedef void (*NetworkCallback)(SplytResponse);
 }
 #endif  // SPLYT_NETWORK_DEFS_H_
