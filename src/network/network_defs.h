@@ -35,7 +35,5 @@ namespace splyt
                 return content;
             }
     };
-
-    typedef void (*NetworkCallback)(SplytResponse);
 }
 #endif  // SPLYT_NETWORK_DEFS_H_

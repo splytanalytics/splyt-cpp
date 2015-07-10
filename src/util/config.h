@@ -24,6 +24,9 @@ namespace splyt
 
             //SSF Output. Ex: json
             static std::string kSsfOutput;
+
+            //Tuning variable cache time to live. Ex. 3600 - 1 Hour
+            static long kTuningCacheTtl;
     };
 }
 #endif  // SPLYT_CONFIG_H_

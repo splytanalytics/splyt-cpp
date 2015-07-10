@@ -10,10 +10,10 @@ $(shell mkdir -p bin)
 all:
 
 lin: $(SRC)
-	g++ $(PARAM) -fPIC -shared  $(INCLUDE) $^ -o lib/libsplyt.so
+	g++ $(PARAM) -fPIC -shared $(INCLUDE) $^ -o lib/libsplyt.so
 
 mac: $(SRC)
-	g++ $(PARAM) -fPIC -undefined suppress -flat_namespace $(INCLUDE) $^ -o lib/libsplyt.dylib
+	g++ $(PARAM) -fPIC -shared $(INCLUDE) $^ -o lib/libsplyt.so
 
 win: $(SRC)
 	g++ $(PARAM) -shared $(INCLUDE) $^ -o lib/libsplyt.dll

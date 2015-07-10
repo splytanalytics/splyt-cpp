@@ -9,4 +9,5 @@ namespace splyt
     std::string Config::kSsfApp = "isos-personalization";
     std::string Config::kSsfVersion = "4";
     std::string Config::kSsfOutput = "json";
+    long Config::kTuningCacheTtl = 1000;
 }

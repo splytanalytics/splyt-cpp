@@ -2,21 +2,19 @@
 
 namespace splyt
 {
-    std::string Util::GetTimestampStr()
+    long Util::GetTimestamp()
     {
-        std::stringstream strm;
-        strm << (std::time(0) * 1000);
-        return strm.str();
+        return (std::time(0) * 1000);
     }
 
-    void Util::Sleep(long value)
+    std::string Util::GetTimestampStr(long t)
     {
-        #ifdef __unix__
-            usleep(value * 1000);
-        #elif _WIN32
-            Sleep(value);
-        #else
-            throw std::runtime_error("No sleep function has been defined.");
-        #endif
+        if (t == 0) {
+            t = Util::GetTimestamp();
+        }
+
+        std::stringstream strm;
+        strm << t;
+        return strm.str();
     }
 }

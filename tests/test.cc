@@ -4,39 +4,47 @@
 #include "splyt.h"
 #include "util/log.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 
-namespace test
+//Sleep function for testing caching.
+void Sleep(long value)
 {
-    void SplytCallback(splyt::SplytResponse response)
-    {
-        splyt::Log::Info("Callback test: " + response.GetContent().toStyledString());
-    }
+    splyt::Log::Info("SLEEPING...");
+
+    #ifdef _WIN32
+        Sleep(value);
+    #else
+        usleep(value * 1000);
+    #endif
 }
 
 int main ()
 {
     splyt::Log::Info("Starting tests.");
 
-    splyt::Init("knetik-bubblepop-test", "testuser", "");
+    splyt::Init("knetik-bubblepop-test", "testuser", "", "testContext");
 
-    //splyt::NewUserChecked("testuser", test::SplytCallback);
+    //splyt::NewUserChecked("testuser");
 
-    Json::Value properties;
-    splyt::BeginTransaction("testuser,", "", "test_cat", 3600, "", properties);
+    splyt::BeginTransaction("testuser,", "", "test_cat", 3600, "", "testContext");
 
-    splyt::Tuning::RecordValue("testvar", "testuser", "", "newtestval");
+    //splyt::Tuning::RecordValue("testvar", "testuser", "", "newtestval");
 
-    splyt::Tuning::Refresh("testvar", "testuser");
+    //splyt::Tuning::Refresh("testvar", "testuser");
 
-    splyt::Util::Sleep(1000);
+    Sleep(2000);
 
     splyt::Tuning::GetValue("testvar", "testuser", splyt::kEntityTypeUser);
 
     splyt::Tuning::GetAllValues("testuser", splyt::kEntityTypeUser);
 
-    //splyt::UpdateTransaction("testuer", "", "test_cat", 24, "", properties);
+    //splyt::UpdateTransaction("testuer", "", "test_cat", 24, "", "testContext");
 
-    //splyt::EndTransaction("testuser", "", "test_cat", "success", "", properties);
+    //splyt::EndTransaction("testuser", "", "test_cat", "success", "", "testContext");
 
     return 0;
 }

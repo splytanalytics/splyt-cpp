@@ -1,5 +1,3 @@
-#include <thread>
-
 #include "network/network.h"
 
 namespace splyt
@@ -25,29 +23,16 @@ namespace splyt
         if (!resp.IsSuccessful()) {
             throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
         }
+
+        Tuning::CacheValues(resp.GetContent()["devicetuning"], true);
     }
 
-    SplytResponse Network::Call(std::string sub_path, Json::Value content, NetworkCallback callback)
+    SplytResponse Network::Call(std::string sub_path, Json::Value content, std::string context)
     {
         if(!Network::httpint) {
             throw std::runtime_error("No HTTP implementation available. Did you call splyt::Init()?");
         }
 
-        //If a callback has been passed, create a new thread to run it in and return a dummy response.
-        if(callback != NULL) {
-            std::thread http_thread (Network::PerformCall, sub_path, content, callback);
-            http_thread.detach();
-
-            SplytResponse response(false);
-            response.SetErrorMessage("A callback was passed to this function.");
-            return response;
-        }
-
-        return Network::PerformCall(sub_path, content);
-    }
-
-    SplytResponse Network::PerformCall(std::string sub_path, Json::Value content, NetworkCallback callback)
-    {
         std::string path = "/" + Config::kSsfApp + "/ws/interface/" + sub_path;
 
         //Build query string.
@@ -62,7 +47,8 @@ namespace splyt
         query.append(Config::kNetworkSdk);
         query.append("&ssf_sdk_version=");
         query.append(Config::kNetworkVersion);
-        query.append("&ssf_sdk_contextname=testContext");
+        query.append("&ssf_sdk_contextname=");
+        query.append(context);
 
         std::string headers[] = {
             "ssf-use-positional-post-params: true",
@@ -71,14 +57,9 @@ namespace splyt
 
         Json::FastWriter fast_writer;
         std::string str_response = Network::httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
-        SplytResponse nresp = Network::ParseResponse(str_response);
+        SplytResponse resp = Network::ParseResponse(str_response);
 
-        if(callback != NULL) {
-            //callback(nresp.GetContent()[sub_path]["data"]);
-            callback(nresp);
-        }
-
-        return nresp;
+        return resp;
     }
 
     SplytResponse Network::ParseResponse(std::string str_response)

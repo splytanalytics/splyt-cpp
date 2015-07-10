@@ -16,7 +16,6 @@ namespace splyt
         private:
             static HttpInterface* httpint;
             static std::string InterpretError(int code);
-            static SplytResponse PerformCall(std::string path, Json::Value content, NetworkCallback callback = NULL);
             static SplytResponse ParseResponse(std::string str_response);
 
         public:
@@ -31,11 +30,11 @@ namespace splyt
 
                 @param std::string sub_path - The path for the API call.
                 @param Json::Value content - JSON content sent to Splyt.
-                @param NetworkCallback callback - Optional callback for async calls.
+                @param std::string context - The context of the call.
 
                 @return SplytResponse - Object that contains error data or the JSON content.
             */
-            static SplytResponse Call(std::string path, Json::Value content, NetworkCallback callback = NULL);
+            static SplytResponse Call(std::string path, Json::Value content, std::string context = "defaultContext");
     };
 }
 #endif  // SPLYT_NETWORK_H_

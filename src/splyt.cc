@@ -12,12 +12,12 @@ namespace splyt
     std::string user_id = "";
     std::string device_id = "";
 
-    void Init(std::string customer_id, std::string user_id, std::string device_id) {
-        splyt::CurlHttpInterface* httpint = new splyt::CurlHttpInterface();
-        splyt::Init(customer_id, user_id, device_id, httpint);
+    void Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
+        CurlHttpInterface* httpint = new CurlHttpInterface();
+        Init(customer_id, user_id, device_id, context, httpint);
     }
 
-    void Init(std::string customer_id, std::string user_id, std::string device_id, HttpInterface* httpint) {
+    void Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint) {
         if (splyt::initialized) {
             throw std::runtime_error("Splyt has already been initialized.");
         }
@@ -41,22 +41,17 @@ namespace splyt
         splyt::initialized = true;
     }
 
-    SplytResponse HandleResponse(std::string type, SplytResponse resp, NetworkCallback callback)
+    SplytResponse HandleResponse(std::string type, SplytResponse resp)
     {
-        if(callback != NULL) {
-            return resp;
-        }
-
         if (!resp.IsSuccessful()) {
-            //throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-            Log::Error("Splyt Error Response: " + resp.GetContent().toStyledString());
+            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
+            //Log::Error("Splyt Error Response: " + resp.GetContent().toStyledString());
         }
 
-        //return resp.GetContent()[type]["data"];
         return resp;
     }
 
-    SplytResponse NewUser(std::string user_id, NetworkCallback callback)
+    SplytResponse NewUser(std::string user_id, std::string context)
     {
         Json::Value json;
 
@@ -66,11 +61,11 @@ namespace splyt
         json.append(user_id);
         json.append(Json::Value::null);
 
-        SplytResponse resp = Network::Call("datacollector_newUser", json, callback);
-        return HandleResponse("datacollector_newUser", resp, callback);
+        SplytResponse resp = Network::Call("datacollector_newUser", json, context);
+        return HandleResponse("datacollector_newUser", resp);
     }
 
-    SplytResponse NewDevice(std::string device_id, NetworkCallback callback)
+    SplytResponse NewDevice(std::string device_id, std::string context)
     {
         Json::Value json;
 
@@ -80,11 +75,11 @@ namespace splyt
         json.append(Json::Value::null);
         json.append(device_id);
 
-        SplytResponse resp = Network::Call("datacollector_newDevice", json, callback);
-        return HandleResponse("datacollector_newDevice", resp, callback);
+        SplytResponse resp = Network::Call("datacollector_newDevice", json, context);
+        return HandleResponse("datacollector_newDevice", resp);
     }
 
-    SplytResponse NewUserChecked(std::string user_id, NetworkCallback callback)
+    SplytResponse NewUserChecked(std::string user_id, std::string context)
     {
         Json::Value json;
 
@@ -94,11 +89,11 @@ namespace splyt
         json.append(user_id);
         json.append(Json::Value::null);
 
-        SplytResponse resp = Network::Call("datacollector_newUserChecked", json, callback);
-        return HandleResponse("datacollector_newUserChecked", resp, callback);
+        SplytResponse resp = Network::Call("datacollector_newUserChecked", json, context);
+        return HandleResponse("datacollector_newUserChecked", resp);
     }
 
-    SplytResponse NewDeviceChecked(std::string device_id, NetworkCallback callback)
+    SplytResponse NewDeviceChecked(std::string device_id, std::string context)
     {
         Json::Value json;
 
@@ -108,11 +103,11 @@ namespace splyt
         json.append(Json::Value::null);
         json.append(device_id);
 
-        SplytResponse resp = Network::Call("datacollector_newDeviceChecked", json, callback);
-        return HandleResponse("datacollector_newDeviceChecked", resp, callback);
+        SplytResponse resp = Network::Call("datacollector_newDeviceChecked", json, context);
+        return HandleResponse("datacollector_newDeviceChecked", resp);
     }
 
-    SplytResponse BeginTransaction(std::string user_id, std::string device_id, std::string category, int timeout, std::string transaction_id, Json::Value properties, NetworkCallback callback)
+    SplytResponse BeginTransaction(std::string user_id, std::string device_id, std::string category, int timeout, std::string transaction_id, std::string context, Json::Value properties)
     {
         Json::Value json;
 
@@ -127,11 +122,11 @@ namespace splyt
         json.append(transaction_id);
         json.append(properties);
 
-        SplytResponse resp = Network::Call("datacollector_beginTransaction", json, callback);
-        return HandleResponse("datacollector_beginTransaction", resp, callback);
+        SplytResponse resp = Network::Call("datacollector_beginTransaction", json, context);
+        return HandleResponse("datacollector_beginTransaction", resp);
     }
 
-    SplytResponse UpdateTransaction(std::string user_id, std::string device_id, std::string category, int progress, std::string transaction_id, Json::Value properties, NetworkCallback callback)
+    SplytResponse UpdateTransaction(std::string user_id, std::string device_id, std::string category, int progress, std::string transaction_id, std::string context, Json::Value properties)
     {
         Json::Value json;
 
@@ -145,11 +140,11 @@ namespace splyt
         json.append(transaction_id);
         json.append(properties);
 
-        SplytResponse resp = Network::Call("datacollector_updateTransaction", json, callback);
-        return HandleResponse("datacollector_updateTransaction", resp, callback);
+        SplytResponse resp = Network::Call("datacollector_updateTransaction", json, context);
+        return HandleResponse("datacollector_updateTransaction", resp);
     }
 
-    SplytResponse EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, Json::Value properties, NetworkCallback callback)
+    SplytResponse EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, std::string context, Json::Value properties)
     {
         Json::Value json;
 
@@ -163,7 +158,7 @@ namespace splyt
         json.append(transaction_id);
         json.append(properties);
 
-        SplytResponse resp = Network::Call("datacollector_endTransaction", json, callback);
-        return HandleResponse("datacollector_endTransaction", resp, callback);
+        SplytResponse resp = Network::Call("datacollector_endTransaction", json, context);
+        return HandleResponse("datacollector_endTransaction", resp);
     }
 }
