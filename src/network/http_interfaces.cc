@@ -52,8 +52,6 @@ namespace splyt
             curl_slist_free_all(headerchunk);
         }
 
-        //Log::Info("RESPONSE: " + response);
-
         return response;
     }
 }

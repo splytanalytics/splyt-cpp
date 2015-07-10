@@ -31,6 +31,7 @@ namespace splyt
     extern std::string user_id;
     extern std::string device_id;
 
+    //Helper function to append user_id and device_id to API calls.
     extern void AppendUD(Json::Value* json, std::string user_id, std::string device_id);
 
     /** Initialize the Splyt SDK.
