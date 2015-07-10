@@ -41,11 +41,33 @@ namespace splyt
         splyt::initialized = true;
     }
 
+    void AppendUD(Json::Value* json, std::string user_id, std::string device_id)
+    {
+        if (user_id.empty()) {
+            if (splyt::user_id.empty()) {
+                json->append(Json::Value::null);
+            } else {
+                json->append(splyt::user_id);
+            }
+        } else {
+            json->append(user_id);
+        }
+
+        if (device_id.empty()) {
+            if (splyt::device_id.empty()) {
+                json->append(Json::Value::null);
+            } else {
+                json->append(splyt::device_id);
+            }
+        } else {
+            json->append(device_id);
+        }
+    }
+
     SplytResponse HandleResponse(std::string type, SplytResponse resp)
     {
         if (!resp.IsSuccessful()) {
             throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
-            //Log::Error("Splyt Error Response: " + resp.GetContent().toStyledString());
         }
 
         return resp;
@@ -107,15 +129,14 @@ namespace splyt
         return HandleResponse("datacollector_newDeviceChecked", resp);
     }
 
-    SplytResponse BeginTransaction(std::string user_id, std::string device_id, std::string category, int timeout, std::string transaction_id, std::string context, Json::Value properties)
+    SplytResponse BeginTransaction(std::string category, int timeout, std::string transaction_id, std::string context, std::string user_id, std::string device_id, Json::Value properties)
     {
         Json::Value json;
 
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        json.append(user_id);
-        json.append(device_id);
+        splyt::AppendUD(&json, user_id, device_id);
         json.append(category);
         json.append("TXN");
         json.append(timeout);
@@ -126,15 +147,14 @@ namespace splyt
         return HandleResponse("datacollector_beginTransaction", resp);
     }
 
-    SplytResponse UpdateTransaction(std::string user_id, std::string device_id, std::string category, int progress, std::string transaction_id, std::string context, Json::Value properties)
+    SplytResponse UpdateTransaction(std::string category, int progress, std::string transaction_id, std::string context, std::string user_id, std::string device_id, Json::Value properties)
     {
         Json::Value json;
 
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        json.append(user_id);
-        json.append(device_id);
+        splyt::AppendUD(&json, user_id, device_id);
         json.append(category);
         json.append(progress);
         json.append(transaction_id);
@@ -144,15 +164,14 @@ namespace splyt
         return HandleResponse("datacollector_updateTransaction", resp);
     }
 
-    SplytResponse EndTransaction(std::string user_id, std::string device_id, std::string category, std::string result, std::string transaction_id, std::string context, Json::Value properties)
+    SplytResponse EndTransaction(std::string category, std::string result, std::string transaction_id, std::string context, std::string user_id, std::string device_id, Json::Value properties)
     {
         Json::Value json;
 
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        json.append(user_id);
-        json.append(device_id);
+        splyt::AppendUD(&json, user_id, device_id);
         json.append(category);
         json.append(result);
         json.append(transaction_id);

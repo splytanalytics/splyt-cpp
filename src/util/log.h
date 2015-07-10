@@ -26,6 +26,7 @@ namespace splyt
 
         public:
             static void Info(std::string s, bool newline = true);
+            static void Warn(std::string s, bool newline = true);
             static void Error(std::string s, bool newline = true);
     };
 }

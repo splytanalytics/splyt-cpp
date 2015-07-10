@@ -45,10 +45,38 @@ namespace splyt
             static void CacheValues(Json::Value values, bool getallc = false);
 
         public:
+            /** Get all tuning values for an entity. These values are cached according to the kTuningCacheTtl variable.
+
+                @param std::string entity_id
+                @param EntityType entity_type
+
+                @return SplytResponse
+                @throws std::runtime_error
+            */
             static SplytResponse GetAllValues(std::string entity_id, EntityType entity_type);
+
+            /** Get a single tuning value. These values are cached according to the kTuningCacheTtl variable.
+
+                @param std::string name
+                @param std::string entity_id
+                @param EntityType entity_type
+
+                @return SplytResponse
+                @throws std::runtime_error
+            */
             static SplytResponse GetValue(std::string name, std::string entity_id, EntityType entity_type);
-            static SplytResponse RecordValue(std::string name, std::string user_id, std::string device_id, std::string default_value);
-            static SplytResponse Refresh(std::string user_id, std::string device_id);
+
+            /** Record the use of a tuning value.
+
+                @param std::string name
+                @param std::string default_value
+                @param std::string user_id - Optional.
+                @param std::string device_id - Optional.
+
+                @return SplytResponse
+                @throws std::runtime_error
+            */
+            static SplytResponse RecordValue(std::string name, std::string default_value, std::string user_id = "", std::string device_id = "");
 
             friend class Network;
     };

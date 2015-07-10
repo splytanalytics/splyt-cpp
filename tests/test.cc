@@ -26,15 +26,9 @@ int main ()
 {
     splyt::Log::Info("Starting tests.");
 
-    splyt::Init("knetik-bubblepop-test", "testuser", "", "testContext");
+    splyt::Init("knetik-bubblepop-test", "testuser", "testdevice", "testContext");
 
-    //splyt::NewUserChecked("testuser");
-
-    splyt::BeginTransaction("testuser,", "", "test_cat", 3600, "", "testContext");
-
-    //splyt::Tuning::RecordValue("testvar", "testuser", "", "newtestval");
-
-    //splyt::Tuning::Refresh("testvar", "testuser");
+    splyt::BeginTransaction("test_cat", 3600, "", "testContext");
 
     Sleep(2000);
 
@@ -42,9 +36,9 @@ int main ()
 
     splyt::Tuning::GetAllValues("testuser", splyt::kEntityTypeUser);
 
-    //splyt::UpdateTransaction("testuer", "", "test_cat", 24, "", "testContext");
+    Sleep(10000);
 
-    //splyt::EndTransaction("testuser", "", "test_cat", "success", "", "testContext");
+    splyt::Tuning::GetAllValues("testuser", splyt::kEntityTypeUser);
 
     return 0;
 }

@@ -16,6 +16,11 @@ namespace splyt
         LogString("INFO: " + s, newline);
     }
 
+    void Log::Warn(std::string s, bool newline)
+    {
+        LogString("WARN: " + s, newline);
+    }
+
     void Log::Error(std::string s, bool newline)
     {
         LogString("ERROR: " + s, newline);
