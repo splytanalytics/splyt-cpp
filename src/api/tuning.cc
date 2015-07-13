@@ -1,11 +1,21 @@
 #include "api/tuning.h"
 
-namespace splyt
+namespace splytapi
 {
-    std::map<std::string, TuningValue*> Tuning::value_cache;
-    long Tuning::getallval_cache_ttl = 0L;
+    Tuning::Tuning(Splyt* sp, Json::Value json)
+    {
+        s = sp;
 
-    void Tuning::CacheValues(Json::Value values, bool getallc)
+        CacheValues(json["devicetuning"], kEntityTypeUser, true);
+        CacheValues(json["usertuning"], kEntityTypeDevice, true);
+    }
+
+    Tuning::~Tuning()
+    {
+        splytapi::Log::Info("Freeing tuning memory.");
+    }
+
+    void Tuning::CacheValues(Json::Value values, EntityType entity_type, bool getallc)
     {
         long cache_time = Util::GetTimestamp() + Config::kTuningCacheTtl;
 
@@ -13,14 +23,18 @@ namespace splyt
             Tuning::getallval_cache_ttl = cache_time;
         }
 
-        Log::Info("CACHING TUNING VALUES: " + values.toStyledString());
+        Log::Info("CACHING TUNING VALUES: " + Tuning::GetEntityTypeString(entity_type) + " " + values.toStyledString());
         for(Json::Value::iterator it = values.begin(); it != values.end(); ++it)
         {
             Json::Value value = (*it);
             std::string skey = it.key().asString();
 
             TuningValue* tval = new TuningValue(value.asString(), cache_time);
-            value_cache[skey] = tval;
+            if(entity_type == kEntityTypeUser) {
+                user_value_cache[skey] = tval;
+            } else {
+                device_value_cache[skey] = tval;
+            }
         }
     }
 
@@ -39,9 +53,9 @@ namespace splyt
             std::string entity_type_string = Tuning::GetEntityTypeString(entity_type);
             json.append(entity_type_string);
 
-            SplytResponse resp = Network::Call("tuner_getAllValues", json);
+            SplytResponse resp = s->GetNetwork()->Call("tuner_getAllValues", json);
             resp.SetContent(resp.GetContent()["value"]);
-            Tuning::CacheValues(resp.GetContent(), true);
+            CacheValues(resp.GetContent(), entity_type, true);
 
             return resp;
         }
@@ -51,19 +65,31 @@ namespace splyt
         SplytResponse resp(true);
 
         Json::Value root;
-        for(std::map<std::string, TuningValue*>::iterator it = value_cache.begin(); it != value_cache.end(); it++) {
-            root[it->first] = it->second->GetValue();
+        if (entity_type == kEntityTypeUser) {
+            for(std::map<std::string, TuningValue*>::iterator it = user_value_cache.begin(); it != user_value_cache.end(); it++) {
+                root[it->first] = it->second->GetValue();
+            }
+        } else {
+            for(std::map<std::string, TuningValue*>::iterator it = device_value_cache.begin(); it != device_value_cache.end(); it++) {
+                root[it->first] = it->second->GetValue();
+            }
         }
+
         resp.SetContent(root);
 
-        Log::Info("GET: " + resp.GetContent().toStyledString());
+        Log::Info("GET: " + Tuning::GetEntityTypeString(entity_type) + " " + resp.GetContent().toStyledString());
         return resp;
     }
 
     SplytResponse Tuning::GetValue(std::string name, std::string entity_id, EntityType entity_type)
     {
         long curtime = Util::GetTimestamp();
-        TuningValue* v = value_cache.find(name)->second;
+        TuningValue* v = NULL;
+        if (entity_type == kEntityTypeUser) {
+            v = user_value_cache.find(name)->second;
+        } else {
+            v = device_value_cache.find(name)->second;
+        }
         long ttl = 0L;
 
         if (v != NULL) {
@@ -83,9 +109,9 @@ namespace splyt
             std::string entity_type_string = Tuning::GetEntityTypeString(entity_type);
             json.append(entity_type_string);
 
-            SplytResponse resp = Network::Call("tuner_getValue", json);
+            SplytResponse resp = s->GetNetwork()->Call("tuner_getValue", json);
             resp.SetContent(resp.GetContent()["value"]);
-            Tuning::CacheValues(resp.GetContent());
+            CacheValues(resp.GetContent(), entity_type);
 
             return resp;
         }
@@ -97,7 +123,7 @@ namespace splyt
         root[name] = v->GetValue();
         resp.SetContent(root);
 
-        Log::Info("GET: " + resp.GetContent().toStyledString());
+        Log::Info("GET: " + Tuning::GetEntityTypeString(entity_type) + " " + resp.GetContent().toStyledString());
 
         return resp;
     }
@@ -109,11 +135,11 @@ namespace splyt
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        splyt::AppendUD(&json, user_id, device_id);
+        s->AppendUD(&json, user_id, device_id);
         json.append(name);
         json.append(default_value);
 
-        SplytResponse resp = Network::Call("tuner_recordUsed", json);
+        SplytResponse resp = s->GetNetwork()->Call("tuner_recordUsed", json);
         return resp;
     }
 

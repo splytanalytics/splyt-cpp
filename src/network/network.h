@@ -7,24 +7,29 @@
 #include <json/json.h>
 
 #include "splyt.h"
-#include "network/network_defs.h"
 
-namespace splyt
+namespace splytapi
 {
     class Network
     {
         private:
-            static HttpInterface* httpint;
-            static std::string InterpretError(int code);
-            static SplytResponse ParseResponse(std::string str_response);
+            Splyt* s;
+            HttpInterface* httpint;
+            std::string InterpretError(int code);
+            SplytResponse ParseResponse(std::string str_response);
 
         public:
+            Network(Splyt* sp);
+            ~Network();
+
             /** Initialize the networking class used to make calls to the Splyt API and
                 send the initial application_init request.
 
                 @param httpint - HttpInterface used for HTTP requests.
+
+                @return Json::Value
             */
-            static void Init(HttpInterface* httpint);
+            Json::Value Init(HttpInterface* http);
 
             /** Make a call to the Splyt API.
 
@@ -34,7 +39,7 @@ namespace splyt
 
                 @return SplytResponse - Object that contains error data or the JSON content.
             */
-            static SplytResponse Call(std::string path, Json::Value content, std::string context = "defaultContext");
+            SplytResponse Call(std::string path, Json::Value content, std::string context = "defaultContext");
     };
 }
 #endif  // SPLYT_NETWORK_H_

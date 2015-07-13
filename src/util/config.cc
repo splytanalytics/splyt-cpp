@@ -1,6 +1,6 @@
 #include "util/config.h"
 
-namespace splyt
+namespace splytapi
 {
     //Configuration defaults.
     std::string Config::kNetworkHost = "https://data.splyt.com";

@@ -6,7 +6,7 @@
 #include <ctime>
 #include <string>
 
-namespace splyt
+namespace splytapi
 {
     class Log
     {

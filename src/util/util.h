@@ -6,7 +6,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace splyt
+namespace splytapi
 {
     class Util
     {

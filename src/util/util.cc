@@ -1,6 +1,6 @@
 #include "util/util.h"
 
-namespace splyt
+namespace splytapi
 {
     long Util::GetTimestamp()
     {

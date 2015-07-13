@@ -1,20 +1,30 @@
 #include "network/network.h"
 
-namespace splyt
+namespace splytapi
 {
-    HttpInterface* Network::httpint;
-
-    void Network::Init(HttpInterface* httpint)
+    Network::Network(Splyt* sp)
     {
-        Network::httpint = httpint;
+        s = sp;
+    }
+
+    Network::~Network()
+    {
+        splytapi::Log::Info("Freeing network memory.");
+        delete httpint;
+        httpint = NULL;
+    }
+
+    Json::Value Network::Init(HttpInterface* httpint)
+    {
+        this->httpint = httpint;
         Log::Info("Network init.");
 
         Json::Value json;
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        json.append(splyt::user_id);
-        json.append(splyt::device_id);
+        json.append(s->user_id);
+        json.append(s->device_id);
         json.append("");
         json.append("");
 
@@ -24,12 +34,12 @@ namespace splyt
             throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
         }
 
-        Tuning::CacheValues(resp.GetContent()["usertuning"], true);
+        return resp.GetContent();
     }
 
     SplytResponse Network::Call(std::string sub_path, Json::Value content, std::string context)
     {
-        if(!Network::httpint) {
+        if(!this->httpint) {
             throw std::runtime_error("No HTTP implementation available. Did you call splyt::Init()?");
         }
 
@@ -40,7 +50,7 @@ namespace splyt
         query.append("&ssf_output=");
         query.append(Config::kSsfOutput);
         query.append("&ssf_cust_id=");
-        query.append(splyt::customer_id);
+        query.append(s->customer_id);
         query.append("&ssf_ws_version=");
         query.append(Config::kSsfVersion);
         query.append("&ssf_sdk=");
@@ -59,7 +69,7 @@ namespace splyt
         std::string str_response = "";
 
         try {
-            str_response = Network::httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
+            str_response = this->httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
         } catch (std::runtime_error e) {
             std::string err = e.what();
             throw std::runtime_error("Network Error: " + err);

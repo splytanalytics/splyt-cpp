@@ -1,7 +1,7 @@
 #ifndef SPLYT_NETWORK_DEFS_H_
 #define SPLYT_NETWORK_DEFS_H_
 
-namespace splyt
+namespace splytapi
 {
     class SplytResponse
     {

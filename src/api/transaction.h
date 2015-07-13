@@ -3,12 +3,17 @@
 
 #include "splyt.h"
 
-namespace splyt
+namespace splytapi
 {
 
     class Transaction
     {
+        private:
+            Splyt* s;
+
         public:
+            Transaction(Splyt* sp);
+
             /** Begin a new transaction.
 
                 NOTE: user_id and device_id are optional, but you must at least pass one or the other.
@@ -23,7 +28,7 @@ namespace splyt
                 @return SplytResponse
                 @throws std::runtime_error
             */
-            static SplytResponse Begin(std::string category, int timeout, std::string transaction_id, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            SplytResponse Begin(std::string category, int timeout, std::string transaction_id, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
 
             /** Update an existing transaction.
 
@@ -39,7 +44,7 @@ namespace splyt
                 @return SplytResponse
                 @throws std::runtime_error
             */
-            static SplytResponse Update(std::string category, int progress, std::string transaction_id, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            SplytResponse Update(std::string category, int progress, std::string transaction_id, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
 
             /** End an existing transaction.
 
@@ -55,7 +60,7 @@ namespace splyt
                 @return SplytResponse
                 @throws std::runtime_error
             */
-            static SplytResponse End(std::string category, std::string result, std::string transaction_id, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            SplytResponse End(std::string category, std::string result, std::string transaction_id, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
     };
 }
 #endif  // SPLYT_TRANSACTION_H_

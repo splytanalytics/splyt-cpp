@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace splyt
+namespace splytapi
 {
     class Config {
         public:

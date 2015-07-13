@@ -1,6 +1,6 @@
 #include "util/log.h"
 
-namespace splyt
+namespace splytapi
 {
     void Log::LogString(std::string s, bool newline)
     {

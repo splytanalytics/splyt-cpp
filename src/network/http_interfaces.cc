@@ -1,6 +1,6 @@
 #include "network/http_interfaces.h"
 
-namespace splyt
+namespace splytapi
 {
     CurlHttpInterface::CurlHttpInterface()
     {
@@ -23,8 +23,8 @@ namespace splyt
         if (curl) {
             //Construct URL.
             std::string full_url = url + path;
-            splyt::Log::Info(full_url);
-            splyt::Log::Info("REQUEST: " + content, false);
+            splytapi::Log::Info(full_url);
+            splytapi::Log::Info("REQUEST: " + content, false);
 
             //Construct headers.
             struct curl_slist* headerchunk = NULL;
@@ -53,8 +53,8 @@ namespace splyt
                 throw std::runtime_error("HTTP Error Code: " + std::to_string(http_code));
             }
 
-            curl_easy_cleanup(curl);
             curl_slist_free_all(headerchunk);
+            curl_easy_cleanup(curl);
         }
 
         return response;

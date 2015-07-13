@@ -3,25 +3,14 @@
 
 #include "splyt.h"
 
-#include "network/network.h"
-
-namespace splyt
+namespace splytapi
 {
-    bool initialized = false;
-    std::string customer_id = "";
-    std::string user_id = "";
-    std::string device_id = "";
-
-    void Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
+    Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
         CurlHttpInterface* httpint = new CurlHttpInterface();
-        Init(customer_id, user_id, device_id, context, httpint);
+        return Init(customer_id, user_id, device_id, context, httpint);
     }
 
-    void Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint) {
-        if (splyt::initialized) {
-            throw std::runtime_error("Splyt has already been initialized.");
-        }
-
+    Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint) {
         Log::Info("Splyt init.");
 
         if(customer_id.empty()) {
@@ -32,39 +21,63 @@ namespace splyt
             throw std::runtime_error("A user or device ID is required.");
         }
 
-        splyt::customer_id = customer_id;
-        splyt::user_id = user_id;
-        splyt::device_id = device_id;
+        Splyt* s = new Splyt();
 
-        Network::Init(httpint);
+        s->customer_id = customer_id;
+        s->user_id = user_id;
+        s->device_id = device_id;
 
-        splyt::initialized = true;
+        s->InitNetwork(httpint);
+
+        return s;
     }
 
-    void AppendUD(Json::Value* json, std::string user_id, std::string device_id)
+    //Clean up memory.
+    Splyt::~Splyt()
     {
-        if (user_id.empty()) {
-            if (splyt::user_id.empty()) {
+        delete network;
+        network = NULL;
+
+        delete transaction;
+        transaction = NULL;
+
+        delete tuning;
+        tuning = NULL;
+    }
+
+    void Splyt::InitNetwork(HttpInterface* httpint)
+    {
+        network = new Network(this);
+        Json::Value json = network->Init(httpint);
+
+        transaction = new Transaction(this);
+        tuning = new Tuning(this, json);
+    }
+
+    void Splyt::AppendUD(Json::Value* json, std::string nuser_id, std::string ndevice_id)
+    {
+        if (nuser_id.empty()) {
+            if (user_id.empty()) {
                 json->append(Json::Value::null);
             } else {
-                json->append(splyt::user_id);
+                json->append(user_id);
             }
         } else {
-            json->append(user_id);
+            json->append(nuser_id);
         }
 
-        if (device_id.empty()) {
-            if (splyt::device_id.empty()) {
+        if (ndevice_id.empty()) {
+            if (device_id.empty()) {
                 json->append(Json::Value::null);
             } else {
-                json->append(splyt::device_id);
+                json->append(device_id);
             }
         } else {
-            json->append(device_id);
+            json->append(ndevice_id);
         }
     }
 
-    SplytResponse HandleResponse(std::string type, SplytResponse resp)
+    SplytResponse Splyt::HandleResponse(std::string type, SplytResponse resp)
     {
         if (!resp.IsSuccessful()) {
             throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
@@ -73,7 +86,7 @@ namespace splyt
         return resp;
     }
 
-    SplytResponse NewUser(std::string user_id, std::string context)
+    SplytResponse Splyt::NewUser(std::string user_id, std::string context)
     {
         Json::Value json;
 
@@ -83,11 +96,11 @@ namespace splyt
         json.append(user_id);
         json.append(Json::Value::null);
 
-        SplytResponse resp = Network::Call("datacollector_newUser", json, context);
+        SplytResponse resp = network->Call("datacollector_newUser", json, context);
         return HandleResponse("datacollector_newUser", resp);
     }
 
-    SplytResponse NewDevice(std::string device_id, std::string context)
+    SplytResponse Splyt::NewDevice(std::string device_id, std::string context)
     {
         Json::Value json;
 
@@ -97,11 +110,11 @@ namespace splyt
         json.append(Json::Value::null);
         json.append(device_id);
 
-        SplytResponse resp = Network::Call("datacollector_newDevice", json, context);
+        SplytResponse resp = network->Call("datacollector_newDevice", json, context);
         return HandleResponse("datacollector_newDevice", resp);
     }
 
-    SplytResponse NewUserChecked(std::string user_id, std::string context)
+    SplytResponse Splyt::NewUserChecked(std::string user_id, std::string context)
     {
         Json::Value json;
 
@@ -111,11 +124,11 @@ namespace splyt
         json.append(user_id);
         json.append(Json::Value::null);
 
-        SplytResponse resp = Network::Call("datacollector_newUserChecked", json, context);
+        SplytResponse resp = network->Call("datacollector_newUserChecked", json, context);
         return HandleResponse("datacollector_newUserChecked", resp);
     }
 
-    SplytResponse NewDeviceChecked(std::string device_id, std::string context)
+    SplytResponse Splyt::NewDeviceChecked(std::string device_id, std::string context)
     {
         Json::Value json;
 
@@ -125,7 +138,7 @@ namespace splyt
         json.append(Json::Value::null);
         json.append(device_id);
 
-        SplytResponse resp = Network::Call("datacollector_newDeviceChecked", json, context);
+        SplytResponse resp = network->Call("datacollector_newDeviceChecked", json, context);
         return HandleResponse("datacollector_newDeviceChecked", resp);
     }
 }

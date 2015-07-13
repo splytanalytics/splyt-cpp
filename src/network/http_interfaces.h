@@ -7,8 +7,10 @@
 
 #include "util/log.h"
 
-namespace splyt
+namespace splytapi
 {
+    class Splyt;
+
     class HttpInterface
     {
         protected:
@@ -18,7 +20,7 @@ namespace splyt
             virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content) = 0;
     };
 
-    class CurlHttpInterface : public splyt::HttpInterface
+    class CurlHttpInterface : public splytapi::HttpInterface
     {
         private:
             static size_t write_to_string(void *ptr, size_t size, size_t count, void *stream);
