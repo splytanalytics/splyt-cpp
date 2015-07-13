@@ -29,10 +29,10 @@ int main ()
 
     splytapi::Log::Info("Starting tests...");
 
-    //Initialize Splyt..
+    //Initialize Splyt.
     splytapi::Splyt* splyt = splytapi::Init("knetik-bubblepop-test", "testuser", "testdevice", "testContext");
 
-    splyt->transaction->Begin("test_cat", 3600, "", "testContext");
+    splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext");
 
     Sleep(2000);
 
@@ -43,6 +43,12 @@ int main ()
     Sleep(10000);
 
     splyt->tuning->GetAllValues("testuser", splytapi::kEntityTypeUser);
+
+    splyt->UpdateUserState("testuser", "testContext", Json::Value::null);
+
+    splyt->UpdateDeviceState("testdevice", "testContext", Json::Value::null);
+
+    splyt->transaction->End("testtransaction", "testcategory", "success", "testContext");
 
     //Clean up memory, the API automatically handles the resources it uses.
     splytapi::Log::Info("Cleaning up memory...");

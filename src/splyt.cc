@@ -141,4 +141,34 @@ namespace splytapi
         SplytResponse resp = network->Call("datacollector_newDeviceChecked", json, context);
         return HandleResponse("datacollector_newDeviceChecked", resp);
     }
+
+    SplytResponse Splyt::UpdateUserState(std::string user_id, std::string context, Json::Value properties)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(user_id);
+        json.append(Json::Value::null);
+        json.append(properties);
+
+        SplytResponse resp = network->Call("datacollector_updateUserState", json, context);
+        return HandleResponse("datacollector_updateUserState", resp);
+    }
+
+    SplytResponse Splyt::UpdateDeviceState(std::string device_id, std::string context, Json::Value properties)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(Json::Value::null);
+        json.append(device_id);
+        json.append(properties);
+
+        SplytResponse resp = network->Call("datacollector_updateDeviceState", json, context);
+        return HandleResponse("datacollector_updateDeviceState", resp);
+    }
 }

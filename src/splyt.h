@@ -97,6 +97,28 @@ namespace splytapi
                 @throws std::runtime_error
             */
             SplytResponse NewDeviceChecked(std::string device_id, std::string context);
+
+            /** Update user state.
+
+                @param std::string user_id
+                @param std::string context
+                @param Json::Value properties
+
+                @return SplytResponse
+                @throws std::runtime_error
+            */
+            SplytResponse UpdateUserState(std::string user_id, std::string context, Json::Value properties = Json::Value::null);
+
+            /** Update device state.
+
+                @param std::string device_id
+                @param std::string context
+                @param Json::Value properties
+
+                @return SplytResponse
+                @throws std::runtime_error
+            */
+            SplytResponse UpdateDeviceState(std::string device_id, std::string context, Json::Value properties = Json::Value::null);
     };
 
     /** Initialize the Splyt SDK.
