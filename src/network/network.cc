@@ -24,7 +24,7 @@ namespace splyt
             throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
         }
 
-        Tuning::CacheValues(resp.GetContent()["devicetuning"], true);
+        Tuning::CacheValues(resp.GetContent()["usertuning"], true);
     }
 
     SplytResponse Network::Call(std::string sub_path, Json::Value content, std::string context)
@@ -56,7 +56,15 @@ namespace splyt
         };
 
         Json::FastWriter fast_writer;
-        std::string str_response = Network::httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
+        std::string str_response = "";
+
+        try {
+            str_response = Network::httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
+        } catch (std::runtime_error e) {
+            std::string err = e.what();
+            throw std::runtime_error("Network Error: " + err);
+        }
+
         SplytResponse resp = Network::ParseResponse(str_response);
 
         return resp;

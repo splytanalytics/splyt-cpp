@@ -44,8 +44,7 @@ namespace splyt
             res = curl_easy_perform(curl);
 
             if (res != CURLE_OK) {
-                splyt::Log::Error("CURL ERROR");
-                splyt::Log::Error(curl_easy_strerror(res));
+                throw std::runtime_error(curl_easy_strerror(res));
             }
 
             curl_easy_cleanup(curl);

@@ -24,11 +24,14 @@ void Sleep(long value)
 
 int main ()
 {
+    splyt::Config::kNetworkHost = "https://data.splyt.com";
+    splyt::Config::kTuningCacheTtl = 10000;
+
     splyt::Log::Info("Starting tests.");
 
     splyt::Init("knetik-bubblepop-test", "testuser", "testdevice", "testContext");
 
-    splyt::BeginTransaction("test_cat", 3600, "", "testContext");
+    splyt::Transaction::Begin("test_cat", 3600, "", "testContext");
 
     Sleep(2000);
 
