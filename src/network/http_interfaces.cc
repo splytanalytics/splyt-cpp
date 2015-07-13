@@ -42,9 +42,15 @@ namespace splyt
             //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1); //CURL verbose debug.
 
             res = curl_easy_perform(curl);
+            long http_code;
+            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 
             if (res != CURLE_OK) {
                 throw std::runtime_error(curl_easy_strerror(res));
+            }
+
+            if (http_code < 200 || http_code >= 300) {
+                throw std::runtime_error("HTTP Error Code: " + std::to_string(http_code));
             }
 
             curl_easy_cleanup(curl);
