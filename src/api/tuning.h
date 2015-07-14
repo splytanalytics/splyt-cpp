@@ -39,12 +39,12 @@ namespace splytapi
     {
         private:
             Splyt* s;
-            std::map<std::string, TuningValue*> user_value_cache;
-            std::map<std::string, TuningValue*> device_value_cache;
+            std::map< std::string, std::map<std::string, TuningValue*> > users_value_cache;
+            std::map< std::string, std::map<std::string, TuningValue*> > devices_value_cache;
             long getallval_cache_ttl;
 
             std::string GetEntityTypeString(EntityType entity_type);
-            void CacheValues(Json::Value values, EntityType entity_type, bool getallc = false);
+            void CacheValues(std::string entity_id, Json::Value values, EntityType entity_type, bool getallc = false);
 
         public:
             Tuning(Splyt* sp, Json::Value json);

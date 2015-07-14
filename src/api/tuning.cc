@@ -6,8 +6,8 @@ namespace splytapi
     {
         s = sp;
 
-        CacheValues(json["devicetuning"], kEntityTypeUser, true);
-        CacheValues(json["usertuning"], kEntityTypeDevice, true);
+        CacheValues(sp->user_id, json["usertuning"], kEntityTypeUser, true);
+        CacheValues(sp->device_id, json["devicetuning"], kEntityTypeDevice, true);
     }
 
     Tuning::~Tuning()
@@ -15,7 +15,7 @@ namespace splytapi
         splytapi::Log::Info("Freeing tuning memory.");
     }
 
-    void Tuning::CacheValues(Json::Value values, EntityType entity_type, bool getallc)
+    void Tuning::CacheValues(std::string entity_id, Json::Value values, EntityType entity_type, bool getallc)
     {
         long cache_time = Util::GetTimestamp() + Config::kTuningCacheTtl;
 
@@ -23,7 +23,7 @@ namespace splytapi
             Tuning::getallval_cache_ttl = cache_time;
         }
 
-        Log::Info("CACHING TUNING VALUES: " + Tuning::GetEntityTypeString(entity_type) + " " + values.toStyledString());
+        Log::Info("CACHING TUNING VALUES: " + entity_id + ":" + Tuning::GetEntityTypeString(entity_type) + " " + values.toStyledString());
         for(Json::Value::iterator it = values.begin(); it != values.end(); ++it)
         {
             Json::Value value = (*it);
@@ -31,9 +31,9 @@ namespace splytapi
 
             TuningValue* tval = new TuningValue(value.asString(), cache_time);
             if(entity_type == kEntityTypeUser) {
-                user_value_cache[skey] = tval;
+                users_value_cache[entity_id][skey] = tval;
             } else {
-                device_value_cache[skey] = tval;
+                devices_value_cache[entity_id][skey] = tval;
             }
         }
     }
@@ -42,42 +42,53 @@ namespace splytapi
     {
         long curtime = Util::GetTimestamp();
 
-        if (curtime > Tuning::getallval_cache_ttl) {
-            Log::Info("Get All Value cache has expired.");
-            Json::Value json;
+        if (curtime <= Tuning::getallval_cache_ttl) {
 
-            std::string ts = Util::GetTimestampStr();
-            json.append(ts);
-            json.append(ts);
-            json.append(entity_id);
-            std::string entity_type_string = Tuning::GetEntityTypeString(entity_type);
-            json.append(entity_type_string);
+            bool entvalid = false;
+            SplytResponse resp(true);
+            Json::Value root;
+            if (entity_type == kEntityTypeUser) {
+                if (users_value_cache.count(entity_id)) {
+                    entvalid = true;
+                    std::map<std::string, TuningValue*> entcache = users_value_cache.find(entity_id)->second;
+                    for(std::map<std::string, TuningValue*>::iterator it = entcache.begin(); it != entcache.end(); it++) {
+                        root[it->first] = it->second->GetValue();
+                    }
+                }
+            } else {
+                if (devices_value_cache.count(entity_id)) {
+                    entvalid = true;
+                    std::map<std::string, TuningValue*> entcache = devices_value_cache.find(entity_id)->second;
+                    for(std::map<std::string, TuningValue*>::iterator it = entcache.begin(); it != entcache.end(); it++) {
+                        root[it->first] = it->second->GetValue();
+                    }
+                }
+            }
 
-            SplytResponse resp = s->GetNetwork()->Call("tuner_getAllValues", json);
-            resp.SetContent(resp.GetContent()["value"]);
-            CacheValues(resp.GetContent(), entity_type, true);
+            if (entvalid) {
+                Log::Info("Get All Value cache has NOT expired and entity already exists.");
+                resp.SetContent(root);
 
-            return resp;
+                Log::Info("GET: " + Tuning::GetEntityTypeString(entity_type) + " " + resp.GetContent().toStyledString());
+                return resp;
+            }
         }
 
-        Log::Info("Get All Value cache has NOT expired.");
 
-        SplytResponse resp(true);
+        Log::Info("Get All Value cache has expired or the entity does not exist.");
+        Json::Value json;
 
-        Json::Value root;
-        if (entity_type == kEntityTypeUser) {
-            for(std::map<std::string, TuningValue*>::iterator it = user_value_cache.begin(); it != user_value_cache.end(); it++) {
-                root[it->first] = it->second->GetValue();
-            }
-        } else {
-            for(std::map<std::string, TuningValue*>::iterator it = device_value_cache.begin(); it != device_value_cache.end(); it++) {
-                root[it->first] = it->second->GetValue();
-            }
-        }
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(entity_id);
+        std::string entity_type_string = Tuning::GetEntityTypeString(entity_type);
+        json.append(entity_type_string);
 
-        resp.SetContent(root);
+        SplytResponse resp = s->GetNetwork()->Call("tuner_getAllValues", json);
+        resp.SetContent(resp.GetContent()["value"]);
+        CacheValues(entity_id, resp.GetContent(), entity_type, true);
 
-        Log::Info("GET: " + Tuning::GetEntityTypeString(entity_type) + " " + resp.GetContent().toStyledString());
         return resp;
     }
 
@@ -86,9 +97,19 @@ namespace splytapi
         long curtime = Util::GetTimestamp();
         TuningValue* v = NULL;
         if (entity_type == kEntityTypeUser) {
-            v = user_value_cache.find(name)->second;
+            if (users_value_cache.count(entity_id)) {
+                std::map<std::string, TuningValue*> entcache = users_value_cache.find(entity_id)->second;
+                if (entcache.count(name)) {
+                    v = entcache.find(name)->second;
+                }
+            }
         } else {
-            v = device_value_cache.find(name)->second;
+            if (devices_value_cache.count(entity_id)) {
+                std::map<std::string, TuningValue*> entcache = devices_value_cache.find(entity_id)->second;
+                if (entcache.count(name)) {
+                    v = entcache.find(name)->second;
+                }
+            }
         }
         long ttl = 0L;
 
@@ -111,7 +132,12 @@ namespace splytapi
 
             SplytResponse resp = s->GetNetwork()->Call("tuner_getValue", json);
             resp.SetContent(resp.GetContent()["value"]);
-            CacheValues(resp.GetContent(), entity_type);
+            if (resp.GetContent()["value"] == Json::Value::null) {
+                splytapi::ThrowDummyResponseException("Tuning variable '" + name + "' for " + entity_type_string + " " + entity_id + " does not exist.");
+                return resp;
+            }
+
+            CacheValues(entity_id, resp.GetContent(), entity_type);
 
             return resp;
         }
