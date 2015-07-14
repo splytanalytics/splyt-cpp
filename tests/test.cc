@@ -42,7 +42,8 @@ int main ()
         splytapi::SplytResponse resp = splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext");
         Log("TESTRESPONSE: " + resp.GetContent().toStyledString());
     } catch (splytapi::splyt_exception e) {
-        Log(e.GetResponse().GetErrorMessage());
+        splytapi::SplytResponse resp = e.GetResponse();
+        Log(resp.GetErrorMessage());
     }
 
     Sleep(2000);
@@ -53,7 +54,21 @@ int main ()
 
     Sleep(10000);
 
-    splyt->tuning->GetAllValues("testuser", splytapi::kEntityTypeUser);
+    try {
+        splytapi::SplytResponse resp = splyt->tuning->GetAllValues("testuser", splytapi::kEntityTypeUser);
+
+        //Get the response content.
+        Json::Value content = resp.GetContent();
+
+        //Get a value from the content.
+        std::string testval = content["testval"].asString();
+
+        //Print the JSON content recieved from the server.
+        Log("testval value: " + testval);
+    } catch (splytapi::splyt_exception e) {
+        splytapi::SplytResponse resp = e.GetResponse();
+        Log(resp.GetErrorMessage());
+    }
 
     splyt->UpdateUserState("testuser", "testContext", Json::Value::null);
 
