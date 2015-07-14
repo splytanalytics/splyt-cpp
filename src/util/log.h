@@ -6,6 +6,8 @@
 #include <ctime>
 #include <string>
 
+#include "util/config.h"
+
 namespace splytapi
 {
     class Log

@@ -14,11 +14,11 @@ namespace splytapi
         Log::Info("Splyt init.");
 
         if(customer_id.empty()) {
-            throw std::runtime_error("A customer ID is required.");
+            splytapi::ThrowDummyResponseException("A customer ID is required.");
         }
 
         if(user_id.empty() && device_id.empty()) {
-            throw std::runtime_error("A user or device ID is required.");
+            splytapi::ThrowDummyResponseException("A user or device ID is required.");
         }
 
         Splyt* s = new Splyt();
@@ -67,7 +67,8 @@ namespace splytapi
     SplytResponse Splyt::HandleResponse(std::string type, SplytResponse resp)
     {
         if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Splyt Error: " + resp.GetErrorMessage());
+            resp.SetErrorMessage("Splyt Error: " + resp.GetErrorMessage());
+            throw splytapi::splyt_exception(resp);
         }
 
         return resp;
@@ -186,5 +187,13 @@ namespace splytapi
 
         delete tuning;
         tuning = NULL;
+    }
+
+    void ThrowDummyResponseException(std::string s)
+    {
+        SplytResponse response(false);
+        response.SetErrorMessage(s);
+        response.SetContent(Json::Value::null);
+        throw splytapi::splyt_exception(response);
     }
 }

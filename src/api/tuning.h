@@ -56,7 +56,7 @@ namespace splytapi
                 @param EntityType entity_type
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse GetAllValues(std::string entity_id, EntityType entity_type);
 
@@ -67,7 +67,7 @@ namespace splytapi
                 @param EntityType entity_type
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse GetValue(std::string name, std::string entity_id, EntityType entity_type);
 
@@ -79,7 +79,7 @@ namespace splytapi
                 @param std::string device_id - Optional.
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse RecordValue(std::string name, std::string default_value, std::string user_id = "", std::string device_id = "");
 

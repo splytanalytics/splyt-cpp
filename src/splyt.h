@@ -10,6 +10,7 @@
 #include "util/config.h"
 #include "util/log.h"
 #include "network/splyt_response.h"
+#include "util/splyt_exception.h"
 #include "network/http_interfaces.h"
 #include "api/tuning.h"
 #include "api/transaction.h"
@@ -64,7 +65,7 @@ namespace splytapi
                 @param std::string context
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse NewUser(std::string user_id, std::string context);
 
@@ -74,7 +75,7 @@ namespace splytapi
                 @param std::string context
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse NewDevice(std::string device_id, std::string context);
 
@@ -84,7 +85,7 @@ namespace splytapi
                 @param std::string context
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse NewUserChecked(std::string user_id, std::string context);
 
@@ -94,7 +95,7 @@ namespace splytapi
                 @param std::string context
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse NewDeviceChecked(std::string device_id, std::string context);
 
@@ -105,7 +106,7 @@ namespace splytapi
                 @param Json::Value properties
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse UpdateUserState(std::string user_id, std::string context, Json::Value properties = Json::Value::null);
 
@@ -116,7 +117,7 @@ namespace splytapi
                 @param Json::Value properties
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse UpdateDeviceState(std::string device_id, std::string context, Json::Value properties = Json::Value::null);
 
@@ -131,7 +132,7 @@ namespace splytapi
                 @param std::string device_id - Optional.
 
                 @return SplytResponse
-                @throws std::runtime_error
+                @throws splyt_exception
             */
             SplytResponse UpdateCollection(std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id = "", std::string device_id = "");
     };
@@ -147,9 +148,12 @@ namespace splytapi
         @param HttpInterface httpint - Optional HttpInterface used for HTTP requests. If one is not passed, it will use the default CurlHttpInterface.
 
         @returns Splyt - An instance of the Splyt API.
-        @throws std::runtime_error
+        @throws splyt_exception
     */
     extern Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context);
     extern Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint);
+
+    //Helper function to throw SplytException.
+    extern void ThrowDummyResponseException(std::string s);
 }
 #endif  // SPLYT_H_

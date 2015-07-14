@@ -1,3 +1,5 @@
+#include "util/splyt_exception.h"
+
 #include "network/network.h"
 
 namespace splytapi
@@ -31,7 +33,7 @@ namespace splytapi
         SplytResponse resp = Network::Call("application_init", json);
 
         if (!resp.IsSuccessful()) {
-            throw std::runtime_error("Failed to initialize Splyt: " + resp.GetErrorMessage());
+            splytapi::ThrowDummyResponseException("Failed to initialize Splyt: " + resp.GetErrorMessage());
         }
 
         return resp.GetContent();
@@ -40,7 +42,7 @@ namespace splytapi
     SplytResponse Network::Call(std::string sub_path, Json::Value content, std::string context)
     {
         if(!this->httpint) {
-            throw std::runtime_error("No HTTP implementation available. Did you call splyt::Init()?");
+            splytapi::ThrowDummyResponseException("No HTTP implementation available. Did you call splyt::Init()?");
         }
 
         std::string path = "/" + Config::kSsfApp + "/ws/interface/" + sub_path;
@@ -72,11 +74,10 @@ namespace splytapi
             str_response = this->httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
         } catch (std::runtime_error e) {
             std::string err = e.what();
-            throw std::runtime_error("Network Error: " + err);
+            splytapi::ThrowDummyResponseException("Network Error: " + err);
         }
 
         SplytResponse resp = Network::ParseResponse(str_response);
-
         return resp;
     }
 

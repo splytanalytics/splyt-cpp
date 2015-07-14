@@ -67,7 +67,7 @@ You can now use the instance of Splyt returned to make api calls like so.
 //Begin a transaction.
 splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext");
 ```
-This is of course only simple one example, more examples and their uses can be found in the [API section](#api).
+This is of course only one simple example, more examples and their uses can be found in the [API section](#api).
 
 Configuration
 ------------

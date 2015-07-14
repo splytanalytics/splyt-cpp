@@ -22,17 +22,28 @@ void Sleep(long value)
     #endif
 }
 
+void Log(std::string s)
+{
+    std::cout << "TEST LOG: " + s << std::endl;
+}
+
 int main ()
 {
+    splytapi::Config::kDebugLog = true;
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000;
 
-    splytapi::Log::Info("Starting tests...");
+    Log("Starting tests...");
 
     //Initialize the Splyt API.
     splytapi::Splyt* splyt = splytapi::Init("knetik-bubblepop-test", "testuser", "testdevice", "testContext");
 
-    splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext");
+    try {
+        splytapi::SplytResponse resp = splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext");
+        Log("TESTRESPONSE: " + resp.GetContent().toStyledString());
+    } catch (splytapi::splyt_exception e) {
+        Log(e.GetResponse().GetErrorMessage());
+    }
 
     Sleep(2000);
 
@@ -53,10 +64,10 @@ int main ()
     splyt->transaction->End("testtransaction", "testcategory", "success", "testContext");
 
     //Clean up memory, the API automatically handles the resources it uses.
-    splytapi::Log::Info("Cleaning up memory...");
+    Log("Cleaning up memory...");
     delete splyt;
     splyt = NULL;
-    splytapi::Log::Info("Done.");
+    Log("Done.");
 
     return 0;
 }

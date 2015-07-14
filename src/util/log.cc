@@ -13,16 +13,22 @@ namespace splytapi
 
     void Log::Info(std::string s, bool newline)
     {
-        LogString("INFO: " + s, newline);
+        if (Config::kDebugLog) {
+            LogString("INFO: " + s, newline);
+        }
     }
 
     void Log::Warn(std::string s, bool newline)
     {
-        LogString("WARN: " + s, newline);
+        if (Config::kDebugLog) {
+            LogString("WARN: " + s, newline);
+        }
     }
 
     void Log::Error(std::string s, bool newline)
     {
-        LogString("ERROR: " + s, newline);
+        if (Config::kDebugLog) {
+            LogString("ERROR: " + s, newline);
+        }
     }
 }

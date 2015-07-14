@@ -7,6 +7,9 @@ namespace splytapi
 {
     class Config {
         public:
+            //Debug logging.
+            static bool kDebugLog;
+
             //Splyt API host. Ex: https://data.splyt.com
             static std::string kNetworkHost;
 

@@ -3,6 +3,7 @@
 namespace splytapi
 {
     //Configuration defaults.
+    bool Config::kDebugLog = false;
     std::string Config::kNetworkHost = "https://data.splyt.com";
     std::string Config::kNetworkSdk = "cpp";
     std::string Config::kNetworkVersion = "4.0.6";
