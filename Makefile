@@ -9,21 +9,14 @@ $(shell mkdir -p bin)
 
 all:
 
-lin: $(SRC)
-	g++ $(PARAM) -fPIC -shared $(INCLUDE) $^ -o lib/libsplyt.so -lcurl
-
-mac: $(SRC)
+unix: $(SRC)
 	g++ $(PARAM) -fPIC -shared $(INCLUDE) $^ -o lib/libsplyt.so -lcurl
 
 win: $(SRC)
 	g++ $(PARAM) -shared $(INCLUDE) $^ -o lib/libsplyt.dll -lcurl
 	cp lib/libsplyt.dll bin/libsplyt.dll
 
-lin-tests: lin tests/test.cc
-	g++ $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt
-	export LD_LIBRARY_PATH="$(LIB_PATH)"; ./bin/test.o
-
-mac-tests: mac tests/test.cc
+unix-tests: unix tests/test.cc
 	g++ $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt
 	export LD_LIBRARY_PATH="$(LIB_PATH)"; ./bin/test.o
 

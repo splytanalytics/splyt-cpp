@@ -29,7 +29,7 @@ int main ()
 
     splytapi::Log::Info("Starting tests...");
 
-    //Initialize Splyt.
+    //Initialize the Splyt API.
     splytapi::Splyt* splyt = splytapi::Init("knetik-bubblepop-test", "testuser", "testdevice", "testContext");
 
     splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext");
@@ -47,6 +47,8 @@ int main ()
     splyt->UpdateUserState("testuser", "testContext", Json::Value::null);
 
     splyt->UpdateDeviceState("testdevice", "testContext", Json::Value::null);
+
+    splyt->UpdateCollection("testcollection", 100, -10, false, "testContext");
 
     splyt->transaction->End("testtransaction", "testcategory", "success", "testContext");
 

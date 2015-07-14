@@ -32,19 +32,6 @@ namespace splytapi
         return s;
     }
 
-    //Clean up memory.
-    Splyt::~Splyt()
-    {
-        delete network;
-        network = NULL;
-
-        delete transaction;
-        transaction = NULL;
-
-        delete tuning;
-        tuning = NULL;
-    }
-
     void Splyt::InitNetwork(HttpInterface* httpint)
     {
         network = new Network(this);
@@ -170,5 +157,34 @@ namespace splytapi
 
         SplytResponse resp = network->Call("datacollector_updateDeviceState", json, context);
         return HandleResponse("datacollector_updateDeviceState", resp);
+    }
+
+    SplytResponse Splyt::UpdateCollection(std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id, std::string device_id)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        AppendUD(&json, user_id, device_id);
+        json.append(name);
+        json.append(balance);
+        json.append(balance_delta);
+        json.append(is_currency);
+
+        SplytResponse resp = network->Call("datacollector_updateCollection", json, context);
+        return HandleResponse("datacollector_updateCollection", resp);
+    }
+
+    Splyt::~Splyt()
+    {
+        delete network;
+        network = NULL;
+
+        delete transaction;
+        transaction = NULL;
+
+        delete tuning;
+        tuning = NULL;
     }
 }

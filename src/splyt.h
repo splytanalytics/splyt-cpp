@@ -66,7 +66,7 @@ namespace splytapi
                 @return SplytResponse
                 @throws std::runtime_error
             */
-            SplytResponse NewUser(std::string user_i, std::string context);
+            SplytResponse NewUser(std::string user_id, std::string context);
 
             /** Create a new device.
 
@@ -119,6 +119,21 @@ namespace splytapi
                 @throws std::runtime_error
             */
             SplytResponse UpdateDeviceState(std::string device_id, std::string context, Json::Value properties = Json::Value::null);
+
+            /** Update collection, used for purchases.
+
+                @param std::string name
+                @param double balance
+                @param balance_delta
+                @param bool is_currency
+                @param std::string context
+                @param std::string user_id - Optional.
+                @param std::string device_id - Optional.
+
+                @return SplytResponse
+                @throws std::runtime_error
+            */
+            SplytResponse UpdateCollection(std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id = "", std::string device_id = "");
     };
 
     /** Initialize the Splyt SDK.
@@ -128,7 +143,7 @@ namespace splytapi
         @param std::string customer_id - Customer ID provided by Splyt.
         @param std::string user_id
         @param std::string device_id
-        @param std::string context
+        @param std::string context - Context of this API call.
         @param HttpInterface httpint - Optional HttpInterface used for HTTP requests. If one is not passed, it will use the default CurlHttpInterface.
 
         @returns Splyt - An instance of the Splyt API.
