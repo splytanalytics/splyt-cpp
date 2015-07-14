@@ -16,13 +16,12 @@ namespace splytapi
 
             /** Begin a new transaction.
 
-                NOTE: user_id and device_id are optional, but you must at least pass one or the other.
                 @param std::string transaction_id
                 @param std::string category
                 @param int timeout
                 @param std::string context
-                @param std::string user_id
-                @param std::string device_id
+                @param std::string user_id - Optional.
+                @param std::string device_id - Optional.
                 @param Json::Value properties - Optional.
 
                 @return SplytResponse
@@ -32,29 +31,27 @@ namespace splytapi
 
             /** Update an existing transaction.
 
-                NOTE: user_id and device_id are optional, but you must at least pass one or the other.
                 @param std::string transaction_id
                 @param std::string category
-                @param int progress
+                @param double progress
                 @param std::string context
-                @param std::string user_id
-                @param std::string device_id
+                @param std::string user_id - Optional.
+                @param std::string device_id - Optional.
                 @param Json::Value properties - Optional.
 
                 @return SplytResponse
                 @throws splyt_exception
             */
-            SplytResponse Update(std::string transaction_id, std::string category, int progress, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            SplytResponse Update(std::string transaction_id, std::string category, double progress, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
 
             /** End an existing transaction.
 
-                NOTE: user_id and device_id are optional, but you must at least pass one or the other.
                 @param std::string transaction_id
                 @param std::string category
                 @param std::string result
                 @param std::string context
-                @param std::string user_id
-                @param std::string device_id
+                @param std::string user_id - Optional.
+                @param std::string device_id - Optional.
                 @param Json::Value properties - Optional.
 
                 @return SplytResponse
