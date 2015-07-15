@@ -62,6 +62,9 @@ void DeleteSplyt(splytapi::Splyt* splyt)
 
 namespace tests
 {
+    static int successes = 0;
+    static int failures = 0;
+
     void EntityTest()
     {
         splytapi::Splyt* splyt = InitSplyt();
@@ -119,7 +122,7 @@ namespace tests
 
         Sleep(10000);
 
-        //Tests default return value
+        //Tests default return value.
         splytapi::Config::kNetworkHost = "https://fake.error.url.com";
         AssertJsonStringEquals(splyt->tuning->GetValue("testval", "defaultval", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "defaultval", __LINE__);
         splytapi::Config::kNetworkHost = "https://data.splyt.com";
@@ -138,8 +141,10 @@ void RunTest(void (*f)(), std::string name)
         Log("Starting test " + name + ".");
         (*f)();
         Log(name + " SUCCESS");
+        tests::successes++;
     } catch (std::runtime_error e) {
         Log(name + " FAILURE: " + e.what());
+        tests::failures++;
     }
 }
 
@@ -149,13 +154,18 @@ int main ()
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000;
 
-    Log("Running unit tests.");
+    Log("##### RUNNING UNIT TESTS #####");
     RunTest(tests::EntityTest, "Entity Test");
     RunTest(tests::EntityStatesTest, "Entity States Test");
     RunTest(tests::CollectionTest, "Collection Test");
     RunTest(tests::TransactionTest, "Transaction Test");
     RunTest(tests::TuningTest, "Tuning Test");
-    Log("Unit tests completed.");
 
+    if (tests::failures > 0) {
+        Log("##### UNIT TEST FAILURE: " + to_string(tests::successes) + " TESTS PASSED - " + to_string(tests::failures) + " TESTS FAILED #####");
+        return 1;
+    }
+
+    Log("##### UNIT TEST SUCCESS: " + to_string(tests::successes) + " TESTS PASSED - " + to_string(tests::failures) + " TESTS FAILED #####");
     return 0;
 }
