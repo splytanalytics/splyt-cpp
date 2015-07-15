@@ -48,6 +48,10 @@ void AssertJsonStringEquals(Json::Value json, std::string key, std::string value
     std::string test = json[key].asString();
     if (test != value) {
         throw std::runtime_error("LINE " + to_string(line) + " ASSERT JSON STRING EQUALS FAILED: key \"" + key + "\" != value \"" + value + "\": \"" + test + "\"");
+    } else {
+        if (splytapi::Config::kDebugLog) {
+            Log("LINE " + to_string(line) + " ASSERT JSON STRING EQUALS SUCCESS: key \"" + key + "\" == value \"" + value + "\"");
+        }
     }
 }
 
