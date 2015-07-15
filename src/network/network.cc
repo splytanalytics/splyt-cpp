@@ -71,7 +71,7 @@ namespace splytapi
         std::string str_response = "";
 
         try {
-            str_response = this->httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content));
+            str_response = this->httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content), Config::kNetworkTimeout);
         } catch (std::runtime_error e) {
             std::string err = e.what();
             splytapi::ThrowDummyResponseException("Network Error: " + err);

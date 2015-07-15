@@ -92,7 +92,7 @@ namespace splytapi
         return resp;
     }
 
-    SplytResponse Tuning::GetValue(std::string name, std::string entity_id, EntityType entity_type)
+    SplytResponse Tuning::GetValue(std::string name, std::string default_value, std::string entity_id, EntityType entity_type)
     {
         long curtime = Util::GetTimestamp();
         TuningValue* v = NULL;
@@ -130,7 +130,19 @@ namespace splytapi
             std::string entity_type_string = Tuning::GetEntityTypeString(entity_type);
             json.append(entity_type_string);
 
-            SplytResponse resp = s->GetNetwork()->Call("tuner_getValue", json);
+            SplytResponse resp(false);
+            try {
+                resp = s->GetNetwork()->Call("tuner_getValue", json);
+            } catch(splytapi::splyt_exception e) {
+                Log::Error("Get Tuning Value Fail(Returning Default): " + e.GetResponse().GetErrorMessage());
+
+                SplytResponse dresp(true);
+                Json::Value content;
+                content[name] = default_value;
+                dresp.SetContent(content);
+                return dresp;
+            }
+
             resp.SetContent(resp.GetContent()["value"]);
             if (resp.GetContent() == Json::Value::null) {
                 splytapi::ThrowDummyResponseException("Tuning variable '" + name + "' for " + entity_type_string + " \"" + entity_id + "\" does not exist.");

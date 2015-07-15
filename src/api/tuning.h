@@ -63,13 +63,14 @@ namespace splytapi
             /** Get a single tuning value. These values are cached according to the kTuningCacheTtl variable.
 
                 @param std::string name
+                @param std::string default_value - Value returned if the Splyt network is not available.
                 @param std::string entity_id
                 @param EntityType entity_type
 
                 @return SplytResponse
                 @throws splyt_exception
             */
-            SplytResponse GetValue(std::string name, std::string entity_id, EntityType entity_type);
+            SplytResponse GetValue(std::string name, std::string default_value, std::string entity_id, EntityType entity_type);
 
             /** Record the use of a tuning value.
 

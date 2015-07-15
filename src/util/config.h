@@ -10,7 +10,7 @@ namespace splytapi
             //Debug logging.
             static bool kDebugLog;
 
-            //Splyt API host. Ex: https://data.splyt.com
+            //Splyt API host. -- Only enterprise customers need this. Ex: https://data.splyt.com
             static std::string kNetworkHost;
 
             //Splyt SDK name. Ex: cpp
@@ -30,6 +30,9 @@ namespace splytapi
 
             //Tuning variable cache time to live. Ex. 3600 - 1 Hour
             static long kTuningCacheTtl;
+
+            //Network call timeout, measured in milliseconds. Ex. 1500
+            static long kNetworkTimeout;
     };
 }
 #endif  // SPLYT_CONFIG_H_

@@ -18,7 +18,7 @@ namespace splytapi
 
         public:
             virtual ~HttpInterface(){}
-            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content) = 0;
+            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout) = 0;
     };
 
     class CurlHttpInterface : public splytapi::HttpInterface
@@ -29,7 +29,7 @@ namespace splytapi
         public:
             CurlHttpInterface();
             ~CurlHttpInterface(){}
-            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content);
+            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout);
     };
 }
 #endif  // SPLYT_HTTP_INTERFACES_H_

@@ -121,9 +121,14 @@ You can also get the response from the server by using the GetContent() function
 ### Configuration
 Configuration for the SDK is located in the file "util/config.h", this contains static variables that can be overwritten before initialization, like so.
 ```c++
-//Change the network host.
-splytapi::Config::kNetworkHost = "https://api.example.com";
+//Set the network host.
+splytapi::Config::kNetworkHost = "https://data.splyt.com";
+
+//Change the tuning variable cache time to live.
 splytapi::Config::kTuningCacheTtl = 10000;
+
+//Change network call timeout, measured in milliseconds.
+splytapi::Config::kNetworkTimeout = 1500;
 ```
 
 The configurations and their explanations are located in "util/config.h" so you can look there for what is able to be modified.
@@ -311,9 +316,10 @@ SplytResponse GetAllValues(std::string entity_id, EntityType entity_type);
 ### splyt->tuning->GetValue
 Get a single tuning value by name.
 ```c++
-SplytResponse GetValue(std::string name, std::string entity_id, EntityType entity_type);
+SplytResponse GetValue(std::string name, std::string default_value, std::string entity_id, EntityType entity_type);
 ```
 - std::string name - Name of the tuning value.
+- std::string default_value - Value returned if the Splyt network is not available.
 - std::string entity_id
 - EntityType entity_type - EntityType Enum, possible values: [kEntityTypeUser, kEntityTypeDevice]
 

@@ -12,7 +12,7 @@ namespace splytapi
         return size*count;
     }
 
-    std::string CurlHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string content)
+    std::string CurlHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout)
     {
         CURL* curl;
         CURLcode res;
@@ -39,6 +39,7 @@ namespace splytapi
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, content.c_str());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_string);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+            curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout);
             //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1); //CURL verbose debug.
 
             res = curl_easy_perform(curl);

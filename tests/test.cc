@@ -47,10 +47,10 @@ void AssertJsonStringEquals(Json::Value json, std::string key, std::string value
 {
     std::string test = json[key].asString();
     if (test != value) {
-        throw std::runtime_error("LINE " + to_string(line) + " ASSERT JSON STRING EQUALS FAILED: key \"" + key + "\" != value \"" + value + "\": \"" + test + "\"");
+        throw std::runtime_error("LINE " + to_string(line) + " ASSERT JSON STRING EQUALS FAILED: key:\"" + key + "\" != value:\"" + value + "\": \"" + test + "\"");
     } else {
         if (splytapi::Config::kDebugLog) {
-            Log("LINE " + to_string(line) + " ASSERT JSON STRING EQUALS SUCCESS: key \"" + key + "\" == value \"" + value + "\"");
+            Log("LINE " + to_string(line) + " ASSERT JSON STRING EQUALS SUCCESS: key:\"" + key + "\" == value:\"" + value + "\"");
         }
     }
 }
@@ -114,12 +114,18 @@ namespace tests
         splytapi::Splyt* splyt = InitSplyt();
 
         AssertJsonStringEquals(splyt->tuning->GetAllValues("testuser", splytapi::kEntityTypeUser).GetContent(), "testvar", "blah", __LINE__);
-        AssertJsonStringEquals(splyt->tuning->GetValue("testval", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "testval", __LINE__);
+        AssertJsonStringEquals(splyt->tuning->GetValue("testval", "default", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "testval", __LINE__);
         AssertJsonStringEquals(splyt->tuning->RecordValue("testval", "default", "testuser").GetContent(), "description", "(Success) ", __LINE__);
 
         Sleep(10000);
 
-        AssertJsonStringEquals(splyt->tuning->GetValue("testval", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "testval", __LINE__);
+        //Tests default return value
+        splytapi::Config::kNetworkHost = "https://fake.error.url.com";
+        AssertJsonStringEquals(splyt->tuning->GetValue("testval", "defaultval", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "defaultval", __LINE__);
+        splytapi::Config::kNetworkHost = "https://data.splyt.com";
+
+        AssertJsonStringEquals(splyt->tuning->GetValue("testval", "default", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "testval", __LINE__);
+        AssertJsonStringEquals(splyt->tuning->GetAllValues("testuser", splytapi::kEntityTypeUser).GetContent(), "testvar", "blah", __LINE__);
 
         DeleteSplyt(splyt);
     }
@@ -139,7 +145,7 @@ void RunTest(void (*f)(), std::string name)
 
 int main ()
 {
-    //splytapi::Config::kDebugLog = true;
+    splytapi::Config::kDebugLog = true;
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000;
 
@@ -147,7 +153,7 @@ int main ()
     RunTest(tests::EntityTest, "Entity Test");
     RunTest(tests::EntityStatesTest, "Entity States Test");
     RunTest(tests::CollectionTest, "Collection Test");
-    RunTest(tests::TransactionTest, "Tranasction Test");
+    RunTest(tests::TransactionTest, "Transaction Test");
     RunTest(tests::TuningTest, "Tuning Test");
     Log("Unit tests completed.");
 
