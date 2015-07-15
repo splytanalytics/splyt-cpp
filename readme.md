@@ -1,4 +1,4 @@
-![Travis CI Build](https://api.travis-ci.org/splytanalytics/splyt-cpp.svg?branch=master)
+[![Build Status](https://travis-ci.org/splytanalytics/splyt-cpp.svg?branch=master)](https://travis-ci.org/splytanalytics/splyt-cpp)
 
 # Splyt C++ SDK
 This is the Splyt C++ software development kit. This SDK should provide everything needed to integrate your C++ application with Splyt Analytics.
