@@ -25,7 +25,7 @@ namespace splytapi
         return s->HandleResponse("datacollector_beginTransaction", resp);
     }
 
-    SplytResponse Transaction::Update(std::string transaction_id, std::string category, int progress, std::string context, std::string user_id, std::string device_id, Json::Value properties)
+    SplytResponse Transaction::Update(std::string transaction_id, std::string category, double progress, std::string context, std::string user_id, std::string device_id, Json::Value properties)
     {
         Json::Value json;
 

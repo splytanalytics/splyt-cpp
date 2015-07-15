@@ -132,8 +132,8 @@ namespace splytapi
 
             SplytResponse resp = s->GetNetwork()->Call("tuner_getValue", json);
             resp.SetContent(resp.GetContent()["value"]);
-            if (resp.GetContent()["value"] == Json::Value::null) {
-                splytapi::ThrowDummyResponseException("Tuning variable '" + name + "' for " + entity_type_string + " " + entity_id + " does not exist.");
+            if (resp.GetContent() == Json::Value::null) {
+                splytapi::ThrowDummyResponseException("Tuning variable '" + name + "' for " + entity_type_string + " \"" + entity_id + "\" does not exist.");
                 return resp;
             }
 

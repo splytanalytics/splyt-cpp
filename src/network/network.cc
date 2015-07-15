@@ -100,7 +100,11 @@ namespace splytapi
                 Log::Error(err);
                 response.SetErrorMessage(err);
             } else {
-                response.SetContent(root["data"]);
+                if (root["data"].isNull()) {
+                    response.SetContent(root);
+                } else {
+                    response.SetContent(root["data"]);
+                }
             }
 
             return response;

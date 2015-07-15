@@ -32,7 +32,7 @@ It will build the file and place it in "lib/libsplyt.dll", link the file with yo
 Installation complete, continue to the [Overview](#overview) section to get started with coding.
 
 ### Source Install
-The instructions above involve building the libary into an shared object for use, but that is not neccessary(Though I do recommend that method) if you just want to build the project directly into your application by including the source and header files in your project. Then of course using the code below to include the needed header file.
+The instructions above involve building the libary into an shared object for use, but that is not neccessary(Though I do recommend that method) if you just want to build the project directly into your application by including the source and header files in your project. Then by using the code below to include the needed header file.
 ```c++
 #include "splyt.h"
 ```
@@ -63,8 +63,10 @@ You must provide either user_id or device_id to initalize the SDK. If you do not
 ```c++
 //Initialize Splyt without a device ID.
 splytapi::Splyt* splyt = splytapi::Init("knetik-bubblepop-test", "testuser", "", "testContext");
+
+//Initialize Splyt without a user ID.
+splytapi::Splyt* splyt = splytapi::Init("knetik-bubblepop-test", "", "testdevice", "testContext");
 ```
-This of course works the other way for user_id.
 
 ### Usage
 You can now use the instance of Splyt returned to make api calls like so.
@@ -72,10 +74,10 @@ You can now use the instance of Splyt returned to make api calls like so.
 //Begin a transaction.
 splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext");
 ```
-This is of course only one simple example, more examples can be found in the [API Functions section](#api-functions) as well as below.
+More examples can be found in the [API Functions section](#api-functions) as well as below.
 
 ### Responses
-All API functions, with the exception of Init, return an instance of the SplytResponse class that contains content returned from the network call. The content is an instance of the Json::Value class from the [JsonCpp library](https://github.com/open-source-parsers/jsoncpp). Documentation for the use of this clas can be found [here](https://github.com/open-source-parsers/jsoncpp/wiki).
+All API functions, with the exception of Init, return an instance of the SplytResponse class that contains content returned from the network call. The content is an instance of the Json::Value class from the [JsonCpp library](https://github.com/open-source-parsers/jsoncpp). Documentation for the use of this class can be found [here](https://github.com/open-source-parsers/jsoncpp/wiki).
 
 Response Example:
 ```c++
@@ -129,8 +131,8 @@ The configurations and their explanations are located in "util/config.h" so you 
 It is not recommended to change configuration once a Splyt instance has been initalized, although it is possible.
 
 
-# Tests
-How to run run SDK tests, tests are of course only needed for development of the SDK.
+# Unit Tests
+How to run the SDK unit tests, tests are only needed for development of the SDK.
 
 ### UNIX Systems
 Inside of the root folder run this command:
@@ -139,16 +141,12 @@ make unix-tests
 ```
 This will build the needed shared object and then include/build the test files. The executable test files are located in the "bin" folder as something like "test.o".
 
-After build completion the tests will run.
-
 ### Windows
 Inside of the root folder run this command:
 ```
 make win-tests
 ```
 This will build the needed DLL and then include/build the test files. The executable test files are located in the "bin" folder as something like "test.exe".
-
-After build completion the tests will run.
 
 
 # API Functions

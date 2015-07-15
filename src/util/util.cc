@@ -13,8 +13,13 @@ namespace splytapi
             t = Util::GetTimestamp();
         }
 
-        std::stringstream strm;
-        strm << t;
-        return strm.str();
+        return Util::ToString(t);
+    }
+
+    template < typename T > std::string Util::ToString( const T& n )
+    {
+        std::ostringstream stm ;
+        stm << n ;
+        return stm.str() ;
     }
 }

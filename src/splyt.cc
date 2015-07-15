@@ -179,6 +179,7 @@ namespace splytapi
 
     Splyt::~Splyt()
     {
+        Log::Info("Freeing Splyt memory.");
         delete network;
         network = NULL;
 
@@ -187,6 +188,7 @@ namespace splytapi
 
         delete tuning;
         tuning = NULL;
+        Log::Info("Splyt memory freed.");
     }
 
     void ThrowDummyResponseException(std::string s)
