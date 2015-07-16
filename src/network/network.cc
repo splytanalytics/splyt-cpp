@@ -1,8 +1,6 @@
 /*
 ** Copyright (c) 2015 Knetik, Inc. All rights reserved.
 */
-#include "util/splyt_exception.h"
-
 #include "network/network.h"
 
 namespace splytapi
