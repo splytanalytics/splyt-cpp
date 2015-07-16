@@ -4,7 +4,9 @@
 #ifndef SPLYT_H_
 #define SPLYT_H_
 
-#include <stddef.h>
+#include <cstdio>
+#include <cstddef>
+#include <stdexcept>
 #include <ctime>
 #include <string>
 #include <json/json.h>

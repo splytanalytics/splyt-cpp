@@ -4,7 +4,6 @@
 #ifndef SPLYT_LOG_H_
 #define SPLYT_LOG_H_
 
-#include <stdio.h>
 #include <iostream>
 #include <ctime>
 #include <string>

@@ -4,7 +4,6 @@
 #ifndef SPLYT_NETWORK_H_
 #define SPLYT_NETWORK_H_
 
-#include <stdio.h>
 #include <string>
 #include <stdexcept>
 #include <json/json.h>
