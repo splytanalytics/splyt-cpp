@@ -20,6 +20,10 @@ namespace splytapi
 
     void Tuning::CacheValues(std::string entity_id, Json::Value values, EntityType entity_type, bool getallc)
     {
+        if (Config::kTuningCacheTtl <= 0) {
+            splytapi::ThrowDummyResponseException("Invalid tuning cache TTL.");
+        }
+
         long cache_time = Util::GetTimestamp() + Config::kTuningCacheTtl;
 
         if (getallc) {

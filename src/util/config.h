@@ -31,10 +31,10 @@ namespace splytapi
             //SSF Output. Ex: json
             static std::string kSsfOutput;
 
-            //Tuning variable cache time to live. Ex. 3600 - 1 Hour
+            //Tuning variable cache time to live, measured in milliseconds. Ex. 900000 - 15 Minutes
             static long kTuningCacheTtl;
 
-            //Network call timeout, measured in milliseconds. Ex. 1500
+            //Network call timeout, measured in seconds. Ex. 5
             static long kNetworkTimeout;
     };
 }

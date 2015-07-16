@@ -24,6 +24,10 @@ namespace splytapi
             splytapi::ThrowDummyResponseException("A user or device ID is required.");
         }
 
+        if (Config::kTuningCacheTtl <= 0) {
+            splytapi::ThrowDummyResponseException("Invalid tuning cache TTL.");
+        }
+
         Splyt* s = new Splyt();
 
         s->customer_id = customer_id;

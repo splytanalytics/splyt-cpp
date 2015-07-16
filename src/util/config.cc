@@ -13,6 +13,6 @@ namespace splytapi
     std::string Config::kSsfApp = "isos-personalization";
     std::string Config::kSsfVersion = "4";
     std::string Config::kSsfOutput = "json";
-    long Config::kTuningCacheTtl = 10000;
-    long Config::kNetworkTimeout = 1500;
+    long Config::kTuningCacheTtl = 900000;
+    long Config::kNetworkTimeout = 5;
 }

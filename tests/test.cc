@@ -108,10 +108,7 @@ namespace tests
     {
         splytapi::Splyt* splyt = InitSplyt();
 
-        splytapi::Config::kNetworkHost = "https://fake.error.url.com";
         AssertJsonStringEquals(splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext").GetContent()["datacollector_beginTransaction"], "description", "(Success) ", __LINE__);
-        splytapi::Config::kNetworkHost = "https://data.splyt.com";
-
         AssertJsonStringEquals(splyt->transaction->Update("testtransaction", "testcategory", 32.23, "testContext").GetContent()["datacollector_updateTransaction"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->transaction->End("testtransaction", "testcategory", "success", "testContext").GetContent()["datacollector_endTransaction"], "description", "(Success) ", __LINE__);
 
@@ -123,7 +120,7 @@ namespace tests
         splytapi::Splyt* splyt = InitSplyt();
 
         AssertJsonStringEquals(splyt->tuning->GetAllValues("testuser", splytapi::kEntityTypeUser).GetContent(), "testvar", "blah", __LINE__);
-        AssertJsonStringEquals(splyt->tuning->GetValue("testval", "default", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "testvall", __LINE__);
+        AssertJsonStringEquals(splyt->tuning->GetValue("testval", "default", "testuser", splytapi::kEntityTypeUser).GetContent(), "testval", "testval", __LINE__);
         AssertJsonStringEquals(splyt->tuning->RecordValue("testval", "default", "testuser").GetContent(), "description", "(Success) ", __LINE__);
 
         Sleep(10000);
@@ -158,7 +155,7 @@ int main ()
 {
     //splytapi::Config::kDebugLog = true;
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
-    splytapi::Config::kTuningCacheTtl = 10000;
+    splytapi::Config::kTuningCacheTtl = 10000; //TTL cache set to 10 seconds.
 
     Log("##### RUNNING UNIT TESTS #####");
     RunTest(tests::EntityTest, "Entity Test");
