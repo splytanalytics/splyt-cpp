@@ -1,3 +1,6 @@
+/*
+** Copyright (c) 2015 Knetik, Inc. All rights reserved.
+*/
 #include "api/transaction.h"
 
 namespace splytapi

@@ -1,3 +1,6 @@
+/*
+** Copyright (c) 2015 Knetik, Inc. All rights reserved.
+*/
 #include <stdexcept>
 #include <stdio.h>
 

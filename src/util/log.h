@@ -1,3 +1,6 @@
+/*
+** Copyright (c) 2015 Knetik, Inc. All rights reserved.
+*/
 #ifndef SPLYT_LOG_H_
 #define SPLYT_LOG_H_
 

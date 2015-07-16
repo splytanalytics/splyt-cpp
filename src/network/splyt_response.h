@@ -1,3 +1,6 @@
+/*
+** Copyright (c) 2015 Knetik, Inc. All rights reserved.
+*/
 #ifndef SPLYT_NETWORK_DEFS_H_
 #define SPLYT_NETWORK_DEFS_H_
 

@@ -1,3 +1,6 @@
+/*
+** Copyright (c) 2015 Knetik, Inc. All rights reserved.
+*/
 #include "network/http_interfaces.h"
 
 namespace splytapi
