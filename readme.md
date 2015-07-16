@@ -129,8 +129,8 @@ splytapi::Config::kNetworkHost = "https://data.splyt.com";
 //Change the tuning variable cache time to live.
 splytapi::Config::kTuningCacheTtl = 10000;
 
-//Change network call timeout, measured in milliseconds.
-splytapi::Config::kNetworkTimeout = 1500;
+//Change network call timeout, measured in seconds.
+splytapi::Config::kNetworkTimeout = 5;
 ```
 
 The configurations and their explanations are located in "util/config.h" so you can look there for what is able to be modified.
