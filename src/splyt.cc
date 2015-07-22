@@ -78,21 +78,21 @@ namespace splytapi
         return resp;
     }
 
-    SplytResponse Splyt::NewUser(std::string user_id, std::string context)
+    SplytResponse Splyt::NewUser(std::string nuser_id, std::string ncontext)
     {
         Json::Value json;
 
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        json.append(user_id);
+        json.append(nuser_id);
         json.append(Json::Value::null);
 
-        SplytResponse resp = network->Call("datacollector_newUser", json, context);
+        SplytResponse resp = network->Call("datacollector_newUser", json, ncontext);
         return HandleResponse("datacollector_newUser", resp);
     }
 
-    SplytResponse Splyt::NewDevice(std::string device_id, std::string context)
+    SplytResponse Splyt::NewDevice(std::string ndevice_id, std::string ncontext)
     {
         Json::Value json;
 
@@ -100,27 +100,27 @@ namespace splytapi
         json.append(ts);
         json.append(ts);
         json.append(Json::Value::null);
-        json.append(device_id);
+        json.append(ndevice_id);
 
-        SplytResponse resp = network->Call("datacollector_newDevice", json, context);
+        SplytResponse resp = network->Call("datacollector_newDevice", json, ncontext);
         return HandleResponse("datacollector_newDevice", resp);
     }
 
-    SplytResponse Splyt::NewUserChecked(std::string user_id, std::string context)
+    SplytResponse Splyt::NewUserChecked(std::string nuser_id, std::string ncontext)
     {
         Json::Value json;
 
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        json.append(user_id);
+        json.append(nuser_id);
         json.append(Json::Value::null);
 
-        SplytResponse resp = network->Call("datacollector_newUserChecked", json, context);
+        SplytResponse resp = network->Call("datacollector_newUserChecked", json, ncontext);
         return HandleResponse("datacollector_newUserChecked", resp);
     }
 
-    SplytResponse Splyt::NewDeviceChecked(std::string device_id, std::string context)
+    SplytResponse Splyt::NewDeviceChecked(std::string ndevice_id, std::string ncontext)
     {
         Json::Value json;
 
@@ -128,28 +128,28 @@ namespace splytapi
         json.append(ts);
         json.append(ts);
         json.append(Json::Value::null);
-        json.append(device_id);
+        json.append(ndevice_id);
 
-        SplytResponse resp = network->Call("datacollector_newDeviceChecked", json, context);
+        SplytResponse resp = network->Call("datacollector_newDeviceChecked", json, ncontext);
         return HandleResponse("datacollector_newDeviceChecked", resp);
     }
 
-    SplytResponse Splyt::UpdateUserState(std::string user_id, std::string context, Json::Value properties)
+    SplytResponse Splyt::UpdateUserState(std::string nuser_id, std::string ncontext, Json::Value nproperties)
     {
         Json::Value json;
 
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        json.append(user_id);
+        json.append(nuser_id);
         json.append(Json::Value::null);
-        json.append(properties);
+        json.append(nproperties);
 
-        SplytResponse resp = network->Call("datacollector_updateUserState", json, context);
+        SplytResponse resp = network->Call("datacollector_updateUserState", json, ncontext);
         return HandleResponse("datacollector_updateUserState", resp);
     }
 
-    SplytResponse Splyt::UpdateDeviceState(std::string device_id, std::string context, Json::Value properties)
+    SplytResponse Splyt::UpdateDeviceState(std::string ndevice_id, std::string ncontext, Json::Value nproperties)
     {
         Json::Value json;
 
@@ -157,27 +157,27 @@ namespace splytapi
         json.append(ts);
         json.append(ts);
         json.append(Json::Value::null);
-        json.append(device_id);
-        json.append(properties);
+        json.append(ndevice_id);
+        json.append(nproperties);
 
-        SplytResponse resp = network->Call("datacollector_updateDeviceState", json, context);
+        SplytResponse resp = network->Call("datacollector_updateDeviceState", json, ncontext);
         return HandleResponse("datacollector_updateDeviceState", resp);
     }
 
-    SplytResponse Splyt::UpdateCollection(std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id, std::string device_id)
+    SplytResponse Splyt::UpdateCollection(std::string nname, double nbalance, double nbalance_delta, bool nis_currency, std::string ncontext, std::string nuser_id, std::string ndevice_id)
     {
         Json::Value json;
 
         std::string ts = Util::GetTimestampStr();
         json.append(ts);
         json.append(ts);
-        AppendUD(&json, user_id, device_id);
-        json.append(name);
-        json.append(balance);
-        json.append(balance_delta);
-        json.append(is_currency);
+        AppendUD(&json, nuser_id, ndevice_id);
+        json.append(nname);
+        json.append(nbalance);
+        json.append(nbalance_delta);
+        json.append(nis_currency);
 
-        SplytResponse resp = network->Call("datacollector_updateCollection", json, context);
+        SplytResponse resp = network->Call("datacollector_updateCollection", json, ncontext);
         return HandleResponse("datacollector_updateCollection", resp);
     }
 

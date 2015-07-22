@@ -17,9 +17,9 @@ namespace splytapi
         httpint = NULL;
     }
 
-    Json::Value Network::Init(HttpInterface* httpint)
+    Json::Value Network::Init(HttpInterface* a)
     {
-        this->httpint = httpint;
+        this->httpint = a;
         Log::Info("Network init.");
 
         Json::Value json;
