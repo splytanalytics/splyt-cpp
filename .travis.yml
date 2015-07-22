@@ -9,6 +9,7 @@ script: make unix-tests
 branches:
   only:
     - master
+    - dev
 
 os:
   - linux
