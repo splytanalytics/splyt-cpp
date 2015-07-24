@@ -20,7 +20,6 @@ namespace splytapi
         private:
             virtual void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
-
         public:
             OverrideHttpInterface();
             ~OverrideHttpInterface(){}

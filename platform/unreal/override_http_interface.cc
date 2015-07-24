@@ -10,7 +10,7 @@ namespace splytapi
 
     }
 
-    void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+    void OverrideHttpInterface::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
     {
         FString UE4Str = Response->GetContentAsString();
         std::string content(TCHAR_TO_UTF8(*UE4Str));
