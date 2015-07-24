@@ -9,6 +9,7 @@
 
 #include "EngineMinimal.h"
 #include "Http.h"
+#include "util/util.h"
 #include "network/http_interface.h"
 
 namespace splytapi
@@ -18,6 +19,8 @@ namespace splytapi
     class OverrideHttpInterface : public splytapi::HttpInterface
     {
         private:
+            bool response_received;
+            std::string http_response;
             virtual void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
         public:
