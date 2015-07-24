@@ -1,21 +1,21 @@
 /*
 ** Copyright (c) 2015 Knetik, Inc. All rights reserved.
 */
-#include "network/http_interfaces.h"
+#include "override_http_interface.h"
 
 namespace splytapi
 {
-    CurlHttpInterface::CurlHttpInterface()
+    OverrideHttpInterface::OverrideHttpInterface()
     {
         curl_global_init(CURL_GLOBAL_ALL);
     }
 
-    size_t CurlHttpInterface::write_to_string(void *ptr, size_t size, size_t count, void *stream) {
+    size_t OverrideHttpInterface::write_to_string(void *ptr, size_t size, size_t count, void *stream) {
         ((std::string*)stream)->append((char*)ptr, 0, size*count);
         return size*count;
     }
 
-    std::string CurlHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout)
+    std::string OverrideHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout)
     {
         CURL* curl;
         CURLcode res;

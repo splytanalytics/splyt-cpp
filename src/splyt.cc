@@ -6,7 +6,7 @@
 namespace splytapi
 {
     Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
-        CurlHttpInterface* httpint = new CurlHttpInterface();
+        OverrideHttpInterface* httpint = new OverrideHttpInterface();
         return Init(customer_id, user_id, device_id, context, httpint);
     }
 

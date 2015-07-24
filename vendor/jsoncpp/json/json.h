@@ -6,28 +6,28 @@
 // //////////////////////////////////////////////////////////////////////
 
 /*
-The JsonCpp library's source code, including accompanying documentation, 
+The JsonCpp library's source code, including accompanying documentation,
 tests and demonstration applications, are licensed under the following
 conditions...
 
-The author (Baptiste Lepilleur) explicitly disclaims copyright in all 
-jurisdictions which recognize such a disclaimer. In such jurisdictions, 
+The author (Baptiste Lepilleur) explicitly disclaims copyright in all
+jurisdictions which recognize such a disclaimer. In such jurisdictions,
 this software is released into the Public Domain.
 
 In jurisdictions which do not recognize Public Domain property (e.g. Germany as of
 2010), this software is Copyright (c) 2007-2010 by Baptiste Lepilleur, and is
 released under the terms of the MIT License (see below).
 
-In jurisdictions which recognize Public Domain property, the user of this 
-software may choose to accept it either as 1) Public Domain, 2) under the 
-conditions of the MIT License (see below), or 3) under the terms of dual 
+In jurisdictions which recognize Public Domain property, the user of this
+software may choose to accept it either as 1) Public Domain, 2) under the
+conditions of the MIT License (see below), or 3) under the terms of dual
 Public Domain/MIT License conditions described here, as they choose.
 
 The MIT License is about as close to Public Domain as a license can get, and is
 described in clear, concise terms at:
 
    http://en.wikipedia.org/wiki/MIT_License
-   
+
 The full text of the MIT License follows:
 
 ========================================================================
@@ -147,20 +147,20 @@ license you like.
 #endif
 
 #ifdef JSON_IN_CPPTL
-#define JSON_API CPPTL_API
+#define JSONCPP_API CPPTL_API
 #elif defined(JSON_DLL_BUILD)
 #if defined(_MSC_VER)
-#define JSON_API __declspec(dllexport)
+#define JSONCPP_API __declspec(dllexport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
 #endif // if defined(_MSC_VER)
 #elif defined(JSON_DLL)
 #if defined(_MSC_VER)
-#define JSON_API __declspec(dllimport)
+#define JSONCPP_API __declspec(dllimport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
 #endif // if defined(_MSC_VER)
 #endif // ifdef JSON_IN_CPPTL
-#if !defined(JSON_API)
-#define JSON_API
+#if !defined(JSONCPP_API)
+#define JSONCPP_API
 #endif
 
 // If JSON_NO_INT64 is defined, then Json only support C++ "int" type for
@@ -302,7 +302,7 @@ namespace Json {
  * This configuration object can be used to force the Reader or Writer
  * to behave in a standard conforming way.
  */
-class JSON_API Features {
+class JSONCPP_API Features {
 public:
   /** \brief A configuration that allows all features and assumes all strings
    * are UTF-8.
@@ -394,21 +394,21 @@ namespace Json {
  *
  * We use nothing but these internally. Of course, STL can throw others.
  */
-class JSON_API Exception;
+class JSONCPP_API Exception;
 /** Exceptions which the user cannot easily avoid.
  *
  * E.g. out-of-memory (when we use malloc), stack-overflow, malicious input
- * 
+ *
  * \remark derived from Json::Exception
  */
-class JSON_API RuntimeError;
+class JSONCPP_API RuntimeError;
 /** Exceptions thrown by JSON_ASSERT/JSON_FAIL macros.
  *
  * These are precondition-violations (user bugs) and internal errors (our bugs).
- * 
+ *
  * \remark derived from Json::Exception
  */
-class JSON_API LogicError;
+class JSONCPP_API LogicError;
 
 /// used internally
 void throwRuntimeError(std::string const& msg);
@@ -455,7 +455,7 @@ enum CommentPlacement {
  * object[code] = 1234;
  * \endcode
  */
-class JSON_API StaticString {
+class JSONCPP_API StaticString {
 public:
   explicit StaticString(const char* czstring) : c_str_(czstring) {}
 
@@ -501,7 +501,7 @@ private:
  * but the Value API does *not* check bounds. That is the responsibility
  * of the caller.
  */
-class JSON_API Value {
+class JSONCPP_API Value {
   friend class ValueIteratorBase;
 public:
   typedef std::vector<std::string> Members;
@@ -940,7 +940,7 @@ private:
 /** \brief Experimental and untested: represents an element of the "path" to
  * access a node.
  */
-class JSON_API PathArgument {
+class JSONCPP_API PathArgument {
 public:
   friend class Path;
 
@@ -971,7 +971,7 @@ private:
  * - ".%" => member name is provided as parameter
  * - ".[%]" => index is provied as parameter
  */
-class JSON_API Path {
+class JSONCPP_API Path {
 public:
   Path(const std::string& path,
        const PathArgument& a1 = PathArgument(),
@@ -1003,7 +1003,7 @@ private:
 /** \brief base class for Value iterators.
  *
  */
-class JSON_API ValueIteratorBase {
+class JSONCPP_API ValueIteratorBase {
 public:
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef unsigned int size_t;
@@ -1068,7 +1068,7 @@ public:
 /** \brief const iterator for object and array value.
  *
  */
-class JSON_API ValueConstIterator : public ValueIteratorBase {
+class JSONCPP_API ValueConstIterator : public ValueIteratorBase {
   friend class Value;
 
 public:
@@ -1117,7 +1117,7 @@ public:
 
 /** \brief Iterator for object and array value.
  */
-class JSON_API ValueIterator : public ValueIteratorBase {
+class JSONCPP_API ValueIterator : public ValueIteratorBase {
   friend class Value;
 
 public:
@@ -1227,7 +1227,7 @@ namespace Json {
  *
  * \deprecated Use CharReader and CharReaderBuilder.
  */
-class JSON_API Reader {
+class JSONCPP_API Reader {
 public:
   typedef char Char;
   typedef const Char* Location;
@@ -1441,7 +1441,7 @@ private:
 
 /** Interface for reading JSON from a char array.
  */
-class JSON_API CharReader {
+class JSONCPP_API CharReader {
 public:
   virtual ~CharReader() {}
   /** \brief Read a Value from a <a HREF="http://www.json.org">JSON</a>
@@ -1487,7 +1487,7 @@ Usage:
   bool ok = parseFromStream(builder, std::cin, &value, &errs);
 \endcode
 */
-class JSON_API CharReaderBuilder : public CharReader::Factory {
+class JSONCPP_API CharReaderBuilder : public CharReader::Factory {
 public:
   // Note: We use a Json::Value so that we can add data-members to this class
   // without a major version bump.
@@ -1558,7 +1558,7 @@ public:
   * Someday we might have a real StreamReader, but for now this
   * is convenient.
   */
-bool JSON_API parseFromStream(
+bool JSONCPP_API parseFromStream(
     CharReader::Factory const&,
     std::istream&,
     Value* root, std::string* errs);
@@ -1587,7 +1587,7 @@ bool JSON_API parseFromStream(
  \throw std::exception on parse error.
  \see Json::operator<<()
 */
-JSON_API std::istream& operator>>(std::istream&, Value&);
+JSONCPP_API std::istream& operator>>(std::istream&, Value&);
 
 } // namespace Json
 
@@ -1649,7 +1649,7 @@ Usage:
   }
 \endcode
 */
-class JSON_API StreamWriter {
+class JSONCPP_API StreamWriter {
 protected:
   std::ostream* sout_;  // not owned; will not delete
 public:
@@ -1665,7 +1665,7 @@ public:
 
   /** \brief A simple abstract factory.
    */
-  class JSON_API Factory {
+  class JSONCPP_API Factory {
   public:
     virtual ~Factory();
     /** \brief Allocate a CharReader via operator new().
@@ -1678,7 +1678,7 @@ public:
 /** \brief Write into stringstream, then return string, for convenience.
  * A StreamWriter will be created from the factory, used, and then deleted.
  */
-std::string JSON_API writeString(StreamWriter::Factory const& factory, Value const& root);
+std::string JSONCPP_API writeString(StreamWriter::Factory const& factory, Value const& root);
 
 
 /** \brief Build a StreamWriter implementation.
@@ -1696,7 +1696,7 @@ Usage:
   std::cout << std::endl;  // add lf and flush
 \endcode
 */
-class JSON_API StreamWriterBuilder : public StreamWriter::Factory {
+class JSONCPP_API StreamWriterBuilder : public StreamWriter::Factory {
 public:
   // Note: We use a Json::Value so that we can add data-members to this class
   // without a major version bump.
@@ -1746,7 +1746,7 @@ public:
 /** \brief Abstract class for writers.
  * \deprecated Use StreamWriter. (And really, this is an implementation detail.)
  */
-class JSON_API Writer {
+class JSONCPP_API Writer {
 public:
   virtual ~Writer();
 
@@ -1762,7 +1762,7 @@ public:
  * \sa Reader, Value
  * \deprecated Use StreamWriterBuilder.
  */
-class JSON_API FastWriter : public Writer {
+class JSONCPP_API FastWriter : public Writer {
 
 public:
   FastWriter();
@@ -1815,7 +1815,7 @@ private:
  * \sa Reader, Value, Value::setComment()
  * \deprecated Use StreamWriterBuilder.
  */
-class JSON_API StyledWriter : public Writer {
+class JSONCPP_API StyledWriter : public Writer {
 public:
   StyledWriter();
   virtual ~StyledWriter() {}
@@ -1877,7 +1877,7 @@ private:
  * \sa Reader, Value, Value::setComment()
  * \deprecated Use StreamWriterBuilder.
  */
-class JSON_API StyledStreamWriter {
+class JSONCPP_API StyledStreamWriter {
 public:
   StyledStreamWriter(std::string indentation = "\t");
   ~StyledStreamWriter() {}
@@ -1917,18 +1917,18 @@ private:
 };
 
 #if defined(JSON_HAS_INT64)
-std::string JSON_API valueToString(Int value);
-std::string JSON_API valueToString(UInt value);
+std::string JSONCPP_API valueToString(Int value);
+std::string JSONCPP_API valueToString(UInt value);
 #endif // if defined(JSON_HAS_INT64)
-std::string JSON_API valueToString(LargestInt value);
-std::string JSON_API valueToString(LargestUInt value);
-std::string JSON_API valueToString(double value);
-std::string JSON_API valueToString(bool value);
-std::string JSON_API valueToQuotedString(const char* value);
+std::string JSONCPP_API valueToString(LargestInt value);
+std::string JSONCPP_API valueToString(LargestUInt value);
+std::string JSONCPP_API valueToString(double value);
+std::string JSONCPP_API valueToString(bool value);
+std::string JSONCPP_API valueToQuotedString(const char* value);
 
 /// \brief Output using the StyledStreamWriter.
 /// \see Json::operator>>()
-JSON_API std::ostream& operator<<(std::ostream&, const Value& root);
+JSONCPP_API std::ostream& operator<<(std::ostream&, const Value& root);
 
 } // namespace Json
 
