@@ -20,6 +20,7 @@ namespace splytapi
     {
         private:
             bool response_received;
+            bool response_valid;
             std::string http_response;
             virtual void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
