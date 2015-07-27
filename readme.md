@@ -16,7 +16,7 @@ Build the shared object to include in your application. This can only be built o
 ```
 make unix
 ```
-It will build the file and place it in "lib/libsplyt.so", link the file with your compiler along with the Splyt header files and include the needed header:
+It will build the file and place it in "lib/libsplyt.so", link the file with your compiler along with the Splyt header files located in "src" and "platform/curl", then include the needed header:
 ```c++
 #include "splyt.h"
 ```
@@ -27,14 +27,16 @@ Build the DLL to include in your application. This can only be built on a Window
 ```
 make win
 ```
-It will build the file and place it in "lib/libsplyt.dll", link the file with your compiler along with the Splyt header files and include the needed header:
+It will build the file and place it in "lib/libsplyt.dll", link the file with your compiler along with the Splyt header files located in "src" and "platform/curl", then include the needed header:
 ```c++
 #include "splyt.h"
 ```
 Installation complete, continue to the [Overview](#overview) section to get started with coding.
 
 ### Source Install
-The instructions above involve building the libary into an shared object for use, but that is not neccessary(Though I do recommend that method) if you just want to build the project directly into your application by including the source and header files in your project. Then by using the code below to include the needed header file.
+The instructions above involve building the libary into an shared object for use, but that is not neccessary if you just want to build the project directly into your application by including the source and header files in your project. Be sure to include the default HttpInterface located in "platform/curl", unless you plan to implement your own.
+
+Then by using the code below to include the needed header file.
 ```c++
 #include "splyt.h"
 ```
@@ -178,7 +180,7 @@ The user_id and device_id parameters are optional, but you must at least pass on
 - std::string context - Context of this API call.
 - HttpInterface httpint - Optional. HttpInterface used for HTTP requests. If one is not passed, it will use the default CurlHttpInterface.
 
-The HttpInterface is used to make POST calls to the Splyt servers and is located in "network/http_interfaces.h", you can create a class that extends the HttpInterface and pass it to the Init function if you wish. If you do not an instance of the CurlHttpInterface will be passed to make network calls.
+The HttpInterface is used to make POST calls to the Splyt servers and is located in "network/http_interface.h", you can create a class that extends the HttpInterface and pass it to the Init function if you wish. If you do not an instance of the OverrideHttpInterface will be passed to make network calls. The default OverrideHttpInterface is located in "platform/curl", this interface uses libcurl to send HTTP requests If the platform you are wishing to compile for does not support this and we do not yet have an SDK for it you can implement a new OverrideHttpInterface yourself.
 
 
 ### splyt->UpdateCollection
