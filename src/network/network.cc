@@ -57,9 +57,9 @@ namespace splytapi
         query.append("&ssf_ws_version=");
         query.append(Config::kSsfVersion);
         query.append("&ssf_sdk=");
-        query.append(Config::kNetworkSdk);
+        query.append(SPLYT_SDK_NAME);
         query.append("&ssf_sdk_version=");
-        query.append(Config::kNetworkVersion);
+        query.append(SPLYT_SDK_VERSION);
         query.append("&ssf_sdk_contextname=");
         query.append(context);
 

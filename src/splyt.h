@@ -22,6 +22,9 @@
 #include "api/transaction.h"
 #include "network/network.h"
 
+#define SPLYT_SDK_NAME "cpp"
+#define SPLYT_SDK_VERSION "5.1.2"
+
 namespace splytapi
 {
     enum Error {
