@@ -6,7 +6,6 @@
 
 #include <string>
 #include <stdexcept>
-#include <json/json.h>
 
 #include "splyt.h"
 

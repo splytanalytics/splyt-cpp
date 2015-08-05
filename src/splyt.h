@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <ctime>
 #include <string>
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 
 #include "util/util.h"
 #include "util/config.h"

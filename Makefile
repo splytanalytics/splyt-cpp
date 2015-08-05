@@ -2,7 +2,7 @@ ifndef CXX
 CXX = g++
 endif
 SRC = $(wildcard src/*.cc) $(wildcard src/*/*.cc) $(wildcard vendor/*/*.cc) $(wildcard vendor/*/*.cpp) $(wildcard platform/curl/*.cc)
-INCLUDE = -I src/ -I vendor/jsoncpp -I platform/curl
+INCLUDE = -I src -I vendor -I platform/curl
 PARAM = -std=c++0x
 OBJECTS = $(addprefix bin/,$(notdir $(SRC:.cc=.o)))
 LIB_PATH = $(shell pwd)/lib

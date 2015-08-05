@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/splytanalytics/splyt-cpp.svg?branch=master)](https://travis-ci.org/splytanalytics/splyt-cpp)
 
 # Splyt C++ SDK
-This is the Splyt C++ software development kit. This SDK should provide everything needed to integrate your C++ application with Splyt Analytics.
+This is the Splyt C++ software development kit and should provide everything needed to integrate your C++ application with Splyt Analytics.
 
 This documentation does not explain how to use the Splyt Platform its self, but how to integrate this specific SDK and the use of its API.
 
@@ -16,7 +16,7 @@ Build the shared object to include in your application. This can only be built o
 ```
 make unix
 ```
-It will build the file and place it in "lib/libsplyt.so", link the file with your compiler along with the Splyt header files located in "src" and "platform/curl", then include the needed header:
+It will build the file and place it in "lib/libsplyt.so", link the file with your compiler along with the Splyt header files located in "src", "platform/curl", and "vendor". Then include the needed header:
 ```c++
 #include "splyt.h"
 ```
@@ -27,16 +27,16 @@ Build the DLL to include in your application. This can only be built on a Window
 ```
 make win
 ```
-It will build the file and place it in "lib/libsplyt.dll", link the file with your compiler along with the Splyt header files located in "src" and "platform/curl", then include the needed header:
+It will build the file and place it in "lib/libsplyt.dll", link the file with your compiler along with the Splyt header files located in "src", "platform/curl", and "vendor". Then include the needed header:
 ```c++
 #include "splyt.h"
 ```
 Installation complete, continue to the [Overview](#overview) section to get started with coding.
 
 ### Source Install
-The instructions above involve building the libary into an shared object for use, but that is not neccessary if you just want to build the project directly into your application by including the source and header files in your project. Be sure to include the default HttpInterface located in "platform/curl", unless you plan to implement your own.
+The instructions above involve building the libary into an shared object for use, but that is not neccessary if you just want to build/compile the project directly into your application by including the source and header files in your project. The required files are located in "src", "platform/curl", and "vendor".
 
-Then by using the code below to include the needed header file.
+Then include the needed header file:
 ```c++
 #include "splyt.h"
 ```
