@@ -10,7 +10,6 @@
 #include <windows.h>
 #else
 #include <unistd.h>
-#endif
 
 //Sleep function for testing caching.
 void Sleep(long value)
@@ -23,6 +22,7 @@ void Sleep(long value)
         usleep(value * 1000);
     #endif
 }
+#endif
 
 template <typename T>
 std::string to_string(T value)
