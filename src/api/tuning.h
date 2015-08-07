@@ -61,7 +61,7 @@ namespace splytapi
                 @return SplytResponse
                 @throws splyt_exception
             */
-            SplytResponse GetAllValues(std::string entity_id, EntityType entity_type);
+            LIBSPLYT_API SplytResponse GetAllValues(std::string entity_id, EntityType entity_type);
 
             /** Get a single tuning value. These values are cached according to the kTuningCacheTtl variable.
 
@@ -73,7 +73,7 @@ namespace splytapi
                 @return SplytResponse
                 @throws splyt_exception
             */
-            SplytResponse GetValue(std::string name, std::string default_value, std::string entity_id, EntityType entity_type);
+            LIBSPLYT_API SplytResponse GetValue(std::string name, std::string default_value, std::string entity_id, EntityType entity_type);
 
             /** Record the use of a tuning value.
 
@@ -85,7 +85,7 @@ namespace splytapi
                 @return SplytResponse
                 @throws splyt_exception
             */
-            SplytResponse RecordValue(std::string name, std::string default_value, std::string user_id = "", std::string device_id = "");
+            LIBSPLYT_API SplytResponse RecordValue(std::string name, std::string default_value, std::string user_id = "", std::string device_id = "");
 
             friend class Network;
     };

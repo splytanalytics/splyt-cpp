@@ -43,6 +43,7 @@ namespace splytapi
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_string);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, Config::kNetworkEnableVerifyPeer);
             //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1); //CURL verbose debug.
 
             res = curl_easy_perform(curl);
@@ -54,7 +55,7 @@ namespace splytapi
             }
 
             if (http_code < 200 || http_code >= 300) {
-                throw std::runtime_error("HTTP Error Code: " + std::to_string(http_code));
+                //throw std::runtime_error("HTTP Error Code: " + std::to_string(http_code));
             }
 
             curl_slist_free_all(headerchunk);

@@ -1,2 +1,11 @@
 /bin
 /lib
+*.suo
+*.user
+*.ncb
+/projects/visual-studio/Debug/
+/projects/visual-studio/Release/
+/projects/visual-studio/CodeAnalyst/
+/projects/visual-studio/ipch/
+*.sdf
+*.opensdf

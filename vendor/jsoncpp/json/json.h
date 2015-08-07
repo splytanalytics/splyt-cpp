@@ -153,7 +153,7 @@ license you like.
 #define JSONCPP_API __declspec(dllexport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
 #endif // if defined(_MSC_VER)
-#elif defined(JSON_DLL)
+#else
 #if defined(_MSC_VER)
 #define JSONCPP_API __declspec(dllimport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING

@@ -6,15 +6,28 @@
 
 #include <string>
 
+#ifdef WIN32
+#ifdef LIBSPLYT_EXPORTS
+#define LIBSPLYT_API __declspec(dllexport)
+#else
+#define LIBSPLYT_API __declspec(dllimport)
+#endif
+#else
+#define LIBSPLYT_API
+#endif
+
 namespace splytapi
 {
-    class Config {
+    class LIBSPLYT_API Config {
         public:
             //Debug logging.
             static bool kDebugLog;
 
             //Splyt API host. -- Only enterprise customers need this. Ex: https://data.splyt.com
             static std::string kNetworkHost;
+
+			//Enable curl verify peer.
+			static bool kNetworkEnableVerifyPeer;
 
             //SSF app. Ex: isos-personalization
             static std::string kSsfApp;

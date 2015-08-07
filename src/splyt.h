@@ -11,6 +11,16 @@
 #include <string>
 #include <jsoncpp/json/json.h>
 
+#ifdef WIN32
+#ifdef LIBSPLYT_EXPORTS
+#define LIBSPLYT_API __declspec(dllexport)
+#else
+#define LIBSPLYT_API __declspec(dllimport)
+#endif
+#else
+#define LIBSPLYT_API
+#endif
+
 #include "util/util.h"
 #include "util/config.h"
 #include "util/log.h"
@@ -42,7 +52,7 @@ namespace splytapi
     class Transaction;
     class Tuning;
 
-    class Splyt
+    class LIBSPLYT_API Splyt
     {
         private:
             Network* network;
@@ -159,8 +169,8 @@ namespace splytapi
         @returns Splyt - An instance of the Splyt API.
         @throws splyt_exception
     */
-    extern Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context);
-    extern Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint);
+    extern LIBSPLYT_API Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context);
+    extern LIBSPLYT_API Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint);
 
     //Helper function to throw SplytException.
     extern void ThrowDummyResponseException(std::string s);
