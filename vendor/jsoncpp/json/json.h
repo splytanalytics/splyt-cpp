@@ -152,8 +152,10 @@ license you like.
 #define JSONCPP_API __declspec(dllexport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
 #else
+#ifdef WIN32
 #define JSONCPP_API __declspec(dllimport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
+#endif
 #endif // ifdef JSON_IN_CPPTL
 #if !defined(JSONCPP_API)
 #define JSONCPP_API

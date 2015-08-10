@@ -5,14 +5,16 @@ This is the Splyt C++ software development kit and should provide everything nee
 
 This documentation does not explain how to use the Splyt Platform its self, but how to integrate this specific SDK and the use of its API.
 
-This SDK makes use of the [JsonCpp library](https://github.com/open-source-parsers/jsoncpp) to parse and use the JSON format.
+This SDK makes use of the [JsonCpp library](https://github.com/open-source-parsers/jsoncpp) to parse and use the JSON format and the [libcurl library](http://curl.haxx.se/libcurl/) for HTTP requests.
 
 
 # Installation
 How to install the SDK into your application.
 
 ### UNIX Systems
-Build the shared object to include in your application. This can only be built on a UNIX like system. Ex: Linux, Mac, etc.
+Ensure you have the libcurl library installed, most UNIX like operating systems will come with this but if you have a build error referring to missing "curl/curl.h" then the issue is that you do not have libcurl installed. Version v7.35.0 or later of libcurl is required.
+
+After that you can build the shared object to include in your application. This can only be built on a UNIX like system. Ex: Linux, Mac, etc.
 ```
 make unix
 ```
@@ -23,15 +25,40 @@ It will build the file and place it in "lib/libsplyt.so", link the file with you
 Installation complete, continue to the [Overview](#overview) section to get started with coding.
 
 ### Windows
-Build the DLL to include in your application. This can only be built on a Windows system.
+There are two options for building with windows, as shown below. The [libcurl library](http://curl.haxx.se/libcurl/) Windows build is distributed with this SDK.
+
+##### Cygwin and MinGW
+Build the DLL and static library to include in your application. This can only be built on a Windows system.
 ```
 make win
 ```
-It will build the file and place it in "lib/libsplyt.dll", link the file with your compiler along with the Splyt header files located in "src", "platform/curl", and "vendor". Then include the needed header:
+It will build the files and place them in "lib/libsplyt.dll" and "lib/libsplyt.a". You must then link the ".a" file with your compiler. Then link "libcurl.a" and "libcurldll.a" located in "projects/visual-studio/vendor/curl". After that include the Splyt header and vendor header files located in "src", "platform/curl", "projects/visual-studio/vendor", and "vendor". Examples for this are shown in the Makefile for building the unit tests.
+
+Finally include the needed header in your code:
 ```c++
 #include "splyt.h"
 ```
 Installation complete, continue to the [Overview](#overview) section to get started with coding.
+
+##### Visual Studio
+A Visual Studio 2010 project is included in this repo that builds the required DLL and lib file, if you have a version later than 2010 you can update the project to your version through the Project menu. Once that is done you can continue with these steps:
+
+1. In the project you are wishing to integrate with go to File->Add->Existing Project.
+2. Navigate to the splyt-cpp directory and find the Visual Studio project LibSplyt located in projects/visual-studio.
+3. To your existing project, add the LibSplyt project as a Project Dependency.
+4. Go to the properties of your existing project, then Configuration Properties->VC++ Directories
+5. Add the following folders to the Include Directories:
+    -projects/visual-studio/vendor
+    -vendor
+    -src
+    -platform/curl
+6. Add the folder in which LibSplyt will be compiling to in the Library Directories field.
+7. Go to Configuration Properties->Linker->Input and add libsplyt.lib to Additional Dependencies.
+8. You should now be able to add "#include splyt.h" into your code and begin programming with the API.
+10. When LibSplyt is built it will copy the required libcurl dlls to the $(OutputDir) macro.
+
+Installation complete, continue to the [Overview](#overview) section to get started with coding.
+
 
 ### Source Install
 The instructions above involve building the libary into an shared object for use, but that is not neccessary if you just want to build/compile the project directly into your application by including the source and header files in your project. The required files are located in "src", "platform/curl", and "vendor".
