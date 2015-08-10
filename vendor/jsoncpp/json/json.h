@@ -149,15 +149,11 @@ license you like.
 #ifdef JSON_IN_CPPTL
 #define JSONCPP_API CPPTL_API
 #elif defined(JSON_DLL_BUILD)
-#if defined(_MSC_VER)
 #define JSONCPP_API __declspec(dllexport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
-#endif // if defined(_MSC_VER)
 #else
-#if defined(_MSC_VER)
 #define JSONCPP_API __declspec(dllimport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
-#endif // if defined(_MSC_VER)
 #endif // ifdef JSON_IN_CPPTL
 #if !defined(JSONCPP_API)
 #define JSONCPP_API

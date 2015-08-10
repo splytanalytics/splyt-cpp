@@ -3944,7 +3944,9 @@ Value& Path::make(Value& root) const {
 #elif defined(__ANDROID__)
 #define snprintf snprintf
 #elif __cplusplus >= 201103L
+#ifndef SNPRINTF_PATCH
 #define snprintf std::snprintf
+#endif
 #endif
 
 #if defined(__BORLANDC__)
