@@ -7,7 +7,10 @@ namespace splytapi
 {
     long Util::GetTimestamp()
     {
+		#pragma warning(push)
+		#pragma warning(disable:4244) //Disable warning regarding loss of accuracy, no concern.
         return (std::time(0) * 1000);
+		#pragma warning(pop)
     }
 
     std::string Util::GetTimestampStr(long t)

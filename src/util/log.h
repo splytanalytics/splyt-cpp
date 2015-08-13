@@ -16,17 +16,18 @@ namespace splytapi
     {
         private:
             static void LogString(std::string s, bool newline);
+			#pragma warning(push)
+			#pragma warning(disable:4996) //Disable warning regarding use of localtime_s, this function is platform specific.
             static std::string CurrentDateTime() {
                 time_t     now = time(0);
                 struct tm  tstruct;
                 char       buf[80];
                 tstruct = *localtime(&now);
-                // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
-                // for more information about date/time format
                 strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
 
                 return buf;
             }
+			#pragma warning(pop)
 
         public:
             static void Info(std::string s, bool newline = true);

@@ -20,6 +20,9 @@ namespace splytapi
 {
     class LIBSPLYT_API Config {
         public:
+			#pragma warning(push)
+			#pragma warning(disable:4251) //Disable DLL warning that does not apply in this context.
+
             //Debug logging.
             static bool kDebugLog;
 
@@ -43,6 +46,7 @@ namespace splytapi
 
             //Network call timeout, measured in seconds. Ex. 5
             static long kNetworkTimeout;
+			#pragma warning(pop)
     };
 }
 #endif  // SPLYT_CONFIG_H_

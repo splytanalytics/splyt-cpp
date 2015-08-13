@@ -1463,7 +1463,7 @@ public:
       char const* beginDoc, char const* endDoc,
       Value* root, std::string* errs) = 0;
 
-  class Factory {
+  class JSONCPP_API Factory {
   public:
     virtual ~Factory() {}
     /** \brief Allocate a CharReader via operator new().

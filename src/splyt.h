@@ -54,6 +54,8 @@ namespace splytapi
 
     class LIBSPLYT_API Splyt
     {
+		#pragma warning(push)
+		#pragma warning(disable:4251) //Disable DLL warning that does not apply in this context.
         private:
             Network* network;
 
@@ -63,6 +65,8 @@ namespace splytapi
             std::string device_id;
             Transaction* transaction;
             Tuning* tuning;
+
+		#pragma warning(pop)
 
             ~Splyt();
 

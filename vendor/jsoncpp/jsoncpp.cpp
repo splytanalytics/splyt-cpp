@@ -2512,7 +2512,10 @@ public:
   virtual ~Exception() throw();
   virtual char const* what() const throw();
 protected:
+#pragma warning(push)
+#pragma warning(disable:4251) //Disable DLL warning that does not apply in this context.
   std::string const msg_;
+#pragma warning(pop)
 };
 class JSONCPP_API RuntimeError : public Exception {
 public:
@@ -2992,6 +2995,7 @@ std::string Value::asString() const {
   default:
     JSON_FAIL_MESSAGE("Type is not convertible to string");
   }
+  return "";
 }
 
 #ifdef JSON_USE_CPPTL
@@ -3024,6 +3028,7 @@ Value::Int Value::asInt() const {
     break;
   }
   JSON_FAIL_MESSAGE("Value is not convertible to Int.");
+  return -1;
 }
 
 Value::UInt Value::asUInt() const {
@@ -3046,6 +3051,7 @@ Value::UInt Value::asUInt() const {
     break;
   }
   JSON_FAIL_MESSAGE("Value is not convertible to UInt.");
+  return -1;
 }
 
 #if defined(JSON_HAS_INT64)
@@ -3069,6 +3075,7 @@ Value::Int64 Value::asInt64() const {
     break;
   }
   JSON_FAIL_MESSAGE("Value is not convertible to Int64.");
+  return -1;
 }
 
 Value::UInt64 Value::asUInt64() const {
@@ -3090,6 +3097,7 @@ Value::UInt64 Value::asUInt64() const {
     break;
   }
   JSON_FAIL_MESSAGE("Value is not convertible to UInt64.");
+  return -1;
 }
 #endif // if defined(JSON_HAS_INT64)
 
@@ -3129,6 +3137,7 @@ double Value::asDouble() const {
     break;
   }
   JSON_FAIL_MESSAGE("Value is not convertible to double.");
+  return -1.0;
 }
 
 float Value::asFloat() const {
@@ -3151,6 +3160,7 @@ float Value::asFloat() const {
     break;
   }
   JSON_FAIL_MESSAGE("Value is not convertible to float.");
+  return -1.0f;
 }
 
 bool Value::asBool() const {
@@ -3169,6 +3179,7 @@ bool Value::asBool() const {
     break;
   }
   JSON_FAIL_MESSAGE("Value is not convertible to bool.");
+  return false;
 }
 
 bool Value::isConvertibleTo(ValueType other) const {
