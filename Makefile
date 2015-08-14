@@ -24,12 +24,12 @@ win: $(SRC)
 
 unix-tests: unix tests/test.cc
 	$(CXX) $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt
-	export LD_LIBRARY_PATH="$(LIB_PATH)"; ./bin/test.o
+	export LD_LIBRARY_PATH="$(LIB_PATH)"; cd bin; ./test.o
 
 win-tests: win tests/test.cc
 	$(CXX) $(INCLUDE) -Iprojects/visual-studio/vendor tests/test.cc -o bin/test.exe -Llib -lsplyt -Lprojects/visual-studio/vendor/curl -lcurl
 	cp -a projects/visual-studio/vendor/curl-dlls/. bin/.
-	export LD_LIBRARY_PATH="$(LIB_PATH)"; ./bin/test.exe
+	export LD_LIBRARY_PATH="$(LIB_PATH)"; cd bin; ./test.exe
 
 clean:
 	rm -f bin/* lib/*
