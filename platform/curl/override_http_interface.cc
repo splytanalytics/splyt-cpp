@@ -2,6 +2,7 @@
 ** Copyright (c) 2015 Knetik, Inc. All rights reserved.
 */
 #include "override_http_interface.h"
+#include <direct.h>
 
 namespace splytapi
 {
@@ -35,6 +36,13 @@ namespace splytapi
             {
                 headerchunk = curl_slist_append(headerchunk, headers[i].c_str());
             }
+
+			char path[FILENAME_MAX];
+			std::cout << _getcwd(path, sizeof(path)) << std::endl;
+
+			#ifdef _MSC_VER //If compiled with Visual Studio, use a local certificate.
+			curl_easy_setopt(curl, CURLOPT_CAINFO, "ca-bundle.crt");
+			#endif
 
             curl_easy_setopt(curl, CURLOPT_URL, full_url.c_str());
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerchunk);

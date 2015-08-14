@@ -77,7 +77,9 @@
       <AdditionalLibraryDirectories>C:\Users\Admin User\Desktop\curl-7.40.0-devel-mingw32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /d /Y "$(ProjectDir)vendor\curl-dlls\*.dll" "$(OutputPath)"</Command>
+      <Command>xcopy /d /Y "$(ProjectDir)vendor\curl-dlls\*.dll" "$(OutputPath)"
+xcopy /d /Y "$(ProjectDir)vendor\curl-dlls\*.crt" "$(OutputPath)"
+xcopy /d /Y "$(ProjectDir)vendor\curl-dlls\*.crt" "$(SolutionDir)$(SolutionName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
