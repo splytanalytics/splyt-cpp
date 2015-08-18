@@ -205,13 +205,13 @@ The user_id and device_id parameters are optional, but you must at least pass on
 - std::string user_id - Optional.
 - std::string device_id - Optional.
 - std::string context - Context of this API call.
-- HttpInterface httpint - Optional. HttpInterface used for HTTP requests. If one is not passed, it will use the default CurlHttpInterface.
+- HttpInterface httpint - Optional. HttpInterface used for HTTP requests. If one is not passed, it will use the default OverrideHttpInterface.
 
 The HttpInterface is used to make POST calls to the Splyt servers and is located in "network/http_interface.h", you can create a class that extends the HttpInterface and pass it to the Init function if you wish. If you do not an instance of the OverrideHttpInterface will be passed to make network calls. The default OverrideHttpInterface is located in "platform/curl", this interface uses libcurl to send HTTP requests If the platform you are wishing to compile for does not support this and we do not yet have an SDK for it you can implement a new OverrideHttpInterface yourself.
 
 
 ### splyt->UpdateCollection
-Update a collection, used to record purchases.
+Updates collection, used for virtual currencies or collections.
 ```c++
 SplytResponse UpdateCollection(std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id = "", std::string device_id = "");
 ```
@@ -222,6 +222,23 @@ SplytResponse UpdateCollection(std::string name, double balance, double balance_
 - std::string context - Context of this API call.
 - std::string user_id - Optional. If not supplied will be set to the user_id passed during initialization.
 - std::string device_id - Optional. If not supplied will be set to the device_id passed during initialization.
+
+
+### splyt->RecordPurchase
+Records purchases, used for real currencies.
+```c++
+SplytResponse RecordPurchase(std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string user_id = "", std::string device_id = "");
+```
+- std::string name - A name for this purchase.
+- double price - Price of item purchased.
+- std::string currency_code - Currency of the purchase. Ex. "USD"
+- std::string result - Result of the purchase. Ex. "success"
+- std::string offer_id - Generic offer identifier.
+- std::string point_of_sale - Sale description.
+- std::string item_name - Name of the item purchased.
+- std::string context - Context of this API call.
+- std::string user_id - Optional. If not supplied will be set to the user_id passed during initialization.
+- std::string device_id - Optional. If not supplied will be set to the user_id passed during initialization.
 
 
 ## Users and Devices
@@ -329,6 +346,19 @@ SplytResponse End(std::string transaction_id, std::string category, std::string 
 - std::string device_id - Optional. If not supplied will be set to the device_id passed during initialization.
 - Json::Value properties - Optional. Properties to set for this transaction, if not supplied properties are set to null.
 
+
+### splyt->transaction->BeginEnd
+Begin and end a new transaction.
+```c++
+SplytResponse BeginEnd(std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+```
+- std::string transaction_id
+- std::string category - This transactions category.
+- std::string result - Result for this transaction, can be anything. Ex. "success"
+- std::string context - Context of this API call.
+- std::string user_id - Optional. If not supplied will be set to the user_id passed during initialization.
+- std::string device_id - Optional. If not supplied will be set to the device_id passed during initialization.
+- Json::Value properties - Optional. Properties to set for this transaction, if not supplied properties are set to null. Note that properties will only be set for the end transaction HTTP request.
 
 ## Tuning
 Functions that are related to managing tuning variables.

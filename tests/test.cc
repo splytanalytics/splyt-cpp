@@ -107,6 +107,7 @@ namespace tests
         splytapi::Splyt* splyt = InitSplyt();
 
         AssertJsonStringEquals(splyt->UpdateCollection("testcollection", 100, -10, false, "testContext").GetContent()["datacollector_updateCollection"], "description", "(Success) ", __LINE__);
+        AssertJsonStringEquals(splyt->RecordPurchase("testpurchase", 19.99, "USD", "success", "offer1", "pointofsale1", "Cool Gear", "testContext").GetContent()["datacollector_endTransaction"], "description", "(Success) ", __LINE__);
 
         DeleteSplyt(splyt);
     }
@@ -118,6 +119,7 @@ namespace tests
         AssertJsonStringEquals(splyt->transaction->Begin("testtransaction", "testcategory", 3600, "testContext").GetContent()["datacollector_beginTransaction"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->transaction->Update("testtransaction", "testcategory", 32.23, "testContext").GetContent()["datacollector_updateTransaction"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->transaction->End("testtransaction", "testcategory", "success", "testContext").GetContent()["datacollector_endTransaction"], "description", "(Success) ", __LINE__);
+        AssertJsonStringEquals(splyt->transaction->BeginEnd("begin-end_testtransaction", "begin-end_testcategory", "success", "testContext").GetContent()["datacollector_endTransaction"], "description", "(Success) ", __LINE__);
 
         DeleteSplyt(splyt);
     }
@@ -160,17 +162,17 @@ void RunTest(void (*f)(), std::string name)
 
 int main()
 {
-    //splytapi::Config::kDebugLog = true;
+    splytapi::Config::kDebugLog = true;
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
-    splytapi::Config::kTuningCacheTtl = 10000; //TTL cache set to 10 seconds.
+    splytapi::Config::kTuningCacheTtl = 10000; //Tuning variable cache TTL set to 10 seconds.
 
     Log("##### RUNNING UNIT TESTS #####");
-    RunTest(tests::InitTest, "Init Test");
-    RunTest(tests::EntityTest, "Entity Test");
-    RunTest(tests::EntityStatesTest, "Entity States Test");
+    //RunTest(tests::InitTest, "Init Test");
+    //RunTest(tests::EntityTest, "Entity Test");
+    //RunTest(tests::EntityStatesTest, "Entity States Test");
     RunTest(tests::CollectionTest, "Collection Test");
-    RunTest(tests::TransactionTest, "Transaction Test");
-    RunTest(tests::TuningTest, "Tuning Test");
+    //RunTest(tests::TransactionTest, "Transaction Test");
+    //RunTest(tests::TuningTest, "Tuning Test");
 
     std::string info = to_string(tests::successes) + " TESTS PASSED - " + to_string(tests::failures) + " TESTS FAILED #####";
     if (tests::failures > 0) {

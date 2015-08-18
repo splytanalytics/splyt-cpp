@@ -36,9 +36,9 @@ namespace splytapi
                 headerchunk = curl_slist_append(headerchunk, headers[i].c_str());
             }
 
-			#ifdef WIN32 //If compiled with Windows, use a local certificate.
-			curl_easy_setopt(curl, CURLOPT_CAINFO, "ca-bundle.crt");
-			#endif
+            #ifdef WIN32 //If compiled with Windows, use a local certificate.
+            curl_easy_setopt(curl, CURLOPT_CAINFO, "ca-bundle.crt");
+            #endif
 
             curl_easy_setopt(curl, CURLOPT_URL, full_url.c_str());
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerchunk);

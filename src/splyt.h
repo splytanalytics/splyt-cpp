@@ -33,7 +33,7 @@
 #include "network/network.h"
 
 #define SPLYT_SDK_NAME "cpp"
-#define SPLYT_SDK_VERSION "5.1.2"
+#define SPLYT_SDK_VERSION "5.1.5"
 
 namespace splytapi
 {
@@ -65,7 +65,6 @@ namespace splytapi
             std::string device_id;
             Transaction* transaction;
             Tuning* tuning;
-
 		#pragma warning(pop)
 
             ~Splyt();
@@ -144,7 +143,7 @@ namespace splytapi
             */
             SplytResponse UpdateDeviceState(std::string device_id, std::string context, Json::Value properties = Json::Value::null);
 
-            /** Update collection, used for purchases.
+            /** Updates collections, used for virtual currencies or collections.
 
                 @param std::string name
                 @param double balance
@@ -158,6 +157,24 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse UpdateCollection(std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id = "", std::string device_id = "");
+
+            /** Records purchases, used for real currencies.
+
+                @param std::string name
+                @param double price
+                @param std::string currency_code
+                @param std::string result
+                @param std::string offer_id
+                @param std::string point_of_sale
+                @param std::string item_name
+                @param std::string context
+                @param std::string user_id - Optional.
+                @param std::string device_id - Optional.
+
+                @return SplytResponse
+                @throws splyt_exception
+            */
+            SplytResponse RecordPurchase(std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string user_id = "", std::string device_id = "");
     };
 
     /** Initialize the Splyt SDK.

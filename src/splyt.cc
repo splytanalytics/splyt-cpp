@@ -5,37 +5,6 @@
 
 namespace splytapi
 {
-    Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
-        OverrideHttpInterface* httpint = new OverrideHttpInterface();
-        return Init(customer_id, user_id, device_id, context, httpint);
-    }
-
-    Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint) {
-        Log::Info("Splyt init.");
-
-        if(customer_id.empty()) {
-            splytapi::ThrowDummyResponseException("A customer ID is required.");
-        }
-
-        if(user_id.empty() && device_id.empty()) {
-            splytapi::ThrowDummyResponseException("A user or device ID is required.");
-        }
-
-        if (Config::kTuningCacheTtl <= 0) {
-            splytapi::ThrowDummyResponseException("Invalid tuning cache TTL.");
-        }
-
-        Splyt* s = new Splyt();
-
-        s->customer_id = customer_id;
-        s->user_id = user_id;
-        s->device_id = device_id;
-
-        s->InitNetwork(httpint);
-
-        return s;
-    }
-
     void Splyt::InitNetwork(HttpInterface* httpint)
     {
         network = new Network(this);
@@ -179,6 +148,53 @@ namespace splytapi
 
         SplytResponse resp = network->Call("datacollector_updateCollection", json, ncontext);
         return HandleResponse("datacollector_updateCollection", resp);
+    }
+
+    SplytResponse Splyt::RecordPurchase(std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string user_id, std::string device_id)
+    {
+        Json::Value properties;
+
+        Json::Value currency_json;
+        currency_json[currency_code] = price;
+        std::cout << "############## PRICE: " << currency_json[currency_code].asString() << std::endl;
+        properties["price"] = currency_json;
+
+        properties["offerId"] = offer_id;
+        properties["pointOfSale"] = point_of_sale;
+        properties["itemName"] = item_name;
+
+        return this->transaction->BeginEnd(name, "purchase", result, context, user_id, device_id, properties);
+    }
+
+    Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
+        OverrideHttpInterface* httpint = new OverrideHttpInterface();
+        return Init(customer_id, user_id, device_id, context, httpint);
+    }
+
+    Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context, HttpInterface* httpint) {
+        Log::Info("Splyt init.");
+
+        if(customer_id.empty()) {
+            splytapi::ThrowDummyResponseException("A customer ID is required.");
+        }
+
+        if(user_id.empty() && device_id.empty()) {
+            splytapi::ThrowDummyResponseException("A user or device ID is required.");
+        }
+
+        if (Config::kTuningCacheTtl <= 0) {
+            splytapi::ThrowDummyResponseException("Invalid tuning cache TTL.");
+        }
+
+        Splyt* s = new Splyt();
+
+        s->customer_id = customer_id;
+        s->user_id = user_id;
+        s->device_id = device_id;
+
+        s->InitNetwork(httpint);
+
+        return s;
     }
 
     Splyt::~Splyt()

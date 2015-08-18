@@ -61,4 +61,10 @@ namespace splytapi
         SplytResponse resp = s->GetNetwork()->Call("datacollector_endTransaction", json, context);
         return s->HandleResponse("datacollector_endTransaction", resp);
     }
+
+    SplytResponse Transaction::BeginEnd(std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id, std::string device_id, Json::Value properties)
+    {
+        this->Begin(transaction_id, category, 1000, context, user_id, device_id, Json::Value::null);
+        return this->End(transaction_id, category, result, context, user_id, device_id, properties);
+    }
 }

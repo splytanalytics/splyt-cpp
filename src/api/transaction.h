@@ -61,6 +61,21 @@ namespace splytapi
                 @throws splyt_exception
             */
             LIBSPLYT_API SplytResponse End(std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+
+            /** Begin and end new transaction.
+
+                @param std::string transaction_id
+                @param std::string category
+                @param std::string result
+                @param std::string context
+                @param std::string user_id - Optional.
+                @param std::string device_id - Optional.
+                @param Json::Value properties - Optional.
+
+                @return SplytResponse
+                @throws splyt_exception
+            */
+            LIBSPLYT_API SplytResponse BeginEnd(std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
     };
 }
 #endif  // SPLYT_TRANSACTION_H_
