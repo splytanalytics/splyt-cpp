@@ -150,7 +150,7 @@ namespace splytapi
         return HandleResponse("datacollector_updateCollection", resp);
     }
 
-    SplytResponse Splyt::RecordPurchase(std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string user_id, std::string device_id)
+    SplytResponse Splyt::RecordPurchase(std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string nuser_id, std::string ndevice_id)
     {
         Json::Value properties;
 
@@ -162,7 +162,7 @@ namespace splytapi
         properties["pointOfSale"] = point_of_sale;
         properties["itemName"] = item_name;
 
-        return this->transaction->BeginEnd(name, "purchase", result, context, user_id, device_id, properties);
+        return this->transaction->BeginEnd(name, "purchase", result, context, nuser_id, ndevice_id, properties);
     }
 
     Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
