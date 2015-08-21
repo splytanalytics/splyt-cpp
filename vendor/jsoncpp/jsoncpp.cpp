@@ -4031,6 +4031,10 @@ std::string valueToString(UInt value) {
 #endif // # if defined(JSON_HAS_INT64)
 
 std::string valueToString(double value) {
+  std::ostringstream stm ;
+  stm << value;
+  return stm.str() ;
+  /*
   // Allocate a buffer that is more than large enough to store the 16 digits of
   // precision requested below.
   char buffer[32];
@@ -4065,6 +4069,7 @@ std::string valueToString(double value) {
   assert(len >= 0);
   fixNumericLocale(buffer, buffer + len);
   return buffer;
+*/
 }
 
 std::string valueToString(bool value) { return value ? "true" : "false"; }

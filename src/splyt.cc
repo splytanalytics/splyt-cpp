@@ -156,7 +156,6 @@ namespace splytapi
 
         Json::Value currency_json;
         currency_json[currency_code] = price;
-        std::cout << "############## PRICE: " << currency_json[currency_code].asString() << std::endl;
         properties["price"] = currency_json;
 
         properties["offerId"] = offer_id;
