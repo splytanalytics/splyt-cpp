@@ -5,6 +5,7 @@ compiler:
   - clang
 
 before_install:
+  - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
   - sudo apt-get install -qq libboost-all-dev
 
 script: make unix-tests
