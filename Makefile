@@ -23,7 +23,7 @@ win: $(SRC)
 	cp lib/libsplyt.dll bin/libsplyt.dll
 
 unix-tests: unix tests/test.cc
-	$(CXX) $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt
+	$(CXX) $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt -lboost_system -lboost_thread
 	export LD_LIBRARY_PATH="$(LIB_PATH)"; ./bin/test.o
 
 win-tests: win tests/test.cc

@@ -26,6 +26,9 @@ namespace splytapi
             //Debug logging.
             static bool kDebugLog;
 
+            //Enables use of async calls.
+            static bool kNetworkEnableThreading;
+
             //Splyt API host. -- Only enterprise customers need this. Ex: https://data.splyt.com
             static std::string kNetworkHost;
 

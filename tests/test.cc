@@ -80,11 +80,21 @@ namespace tests
     {
         splytapi::Splyt* splyt = InitSplyt();
 
+        splyt->NewUserAsync(NULL, "testuser", "testContext");
+        /*
+        splyt->NewUserAsync(NULL, "testuser", "testContext");
+        splyt->NewUserAsync(NULL, "testuser", "testContext");
+        splyt->NewUserAsync(NULL, "testuser", "testContext");
+        splyt->NewUserAsync(NULL, "testuser", "testContext");
+        */
+
+        /*
         AssertJsonStringEquals(splyt->NewUser("testuser", "testContext").GetContent()["datacollector_newUser"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->NewDevice("testdevice", "testContext").GetContent()["datacollector_newDevice"], "description", "(Success) ", __LINE__);
 
         AssertJsonStringEquals(splyt->NewUserChecked("testuser", "testContext").GetContent()["datacollector_newUser"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->NewDeviceChecked("testdevice", "testContext").GetContent()["datacollector_newDevice"], "description", "(Success) ", __LINE__);
+        */
 
         DeleteSplyt(splyt);
     }
@@ -162,17 +172,17 @@ void RunTest(void (*f)(), std::string name)
 
 int main()
 {
-    //splytapi::Config::kDebugLog = true;
+    splytapi::Config::kDebugLog = true;
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000; //Tuning variable cache TTL set to 10 seconds.
 
     Log("##### RUNNING UNIT TESTS #####");
-    RunTest(tests::InitTest, "Init Test");
+    //RunTest(tests::InitTest, "Init Test");
     RunTest(tests::EntityTest, "Entity Test");
-    RunTest(tests::EntityStatesTest, "Entity States Test");
-    RunTest(tests::CollectionTest, "Collection Test");
-    RunTest(tests::TransactionTest, "Transaction Test");
-    RunTest(tests::TuningTest, "Tuning Test");
+    //RunTest(tests::EntityStatesTest, "Entity States Test");
+    //RunTest(tests::CollectionTest, "Collection Test");
+    //RunTest(tests::TransactionTest, "Transaction Test");
+    //RunTest(tests::TuningTest, "Tuning Test");
 
     std::string info = to_string(tests::successes) + " TESTS PASSED - " + to_string(tests::failures) + " TESTS FAILED #####";
     if (tests::failures > 0) {

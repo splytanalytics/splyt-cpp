@@ -28,12 +28,13 @@
 #include "util/splyt_exception.h"
 #include "network/http_interface.h"
 #include "override_http_interface.h"
+#include "thread_manager.h"
 #include "api/tuning.h"
 #include "api/transaction.h"
 #include "network/network.h"
 
 #define SPLYT_SDK_NAME "cpp"
-#define SPLYT_SDK_VERSION "5.1.5"
+#define SPLYT_SDK_VERSION "5.2.2"
 
 namespace splytapi
 {
@@ -51,6 +52,9 @@ namespace splytapi
     class Network;
     class Transaction;
     class Tuning;
+    class ThreadManager;
+
+    typedef void (*NetworkCallback)(SplytResponse);
 
     class LIBSPLYT_API Splyt
     {
@@ -58,6 +62,7 @@ namespace splytapi
 		#pragma warning(disable:4251) //Disable DLL warning that does not apply in this context.
         private:
             Network* network;
+            ThreadManager* thread_manager;
 
         public:
             std::string customer_id;
@@ -90,6 +95,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse NewUser(std::string user_id, std::string context);
+            void NewUserAsync(NetworkCallback callback, std::string user_id, std::string context);
 
             /** Create a new device.
 

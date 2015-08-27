@@ -7,6 +7,7 @@ namespace splytapi
 {
     //Configuration defaults.
     bool Config::kDebugLog = false;
+    bool Config::kNetworkEnableThreading = true;
     std::string Config::kNetworkHost = "https://data.splyt.com";
 	bool Config::kNetworkEnableVerifyPeer = true;
     std::string Config::kSsfApp = "isos-personalization";
