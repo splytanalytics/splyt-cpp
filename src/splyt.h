@@ -54,10 +54,11 @@ namespace splytapi
     class Tuning;
     class ThreadManager;
 
-    typedef void (*NetworkCallback)(SplytResponse);
-
     class LIBSPLYT_API Splyt
     {
+        friend class Transaction;
+        friend class Tuning;
+
 		#pragma warning(push)
 		#pragma warning(disable:4251) //Disable DLL warning that does not apply in this context.
         private:
@@ -106,6 +107,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse NewDevice(std::string device_id, std::string context);
+            void NewDeviceAsync(NetworkCallback callback, std::string device_id, std::string context);
 
             /** Create a new user if it does not already exist.
 
@@ -116,6 +118,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse NewUserChecked(std::string user_id, std::string context);
+            void NewUserCheckedAsync(NetworkCallback callback, std::string user_id, std::string context);
 
             /** Create a new device if it does not already exist.
 
@@ -126,6 +129,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse NewDeviceChecked(std::string device_id, std::string context);
+            void NewDeviceCheckedAsync(NetworkCallback callback, std::string device_id, std::string context);
 
             /** Update user state.
 
@@ -137,6 +141,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse UpdateUserState(std::string user_id, std::string context, Json::Value properties = Json::Value::null);
+            void UpdateUserStateAsync(NetworkCallback callback, std::string user_id, std::string context, Json::Value properties = Json::Value::null);
 
             /** Update device state.
 
@@ -148,6 +153,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse UpdateDeviceState(std::string device_id, std::string context, Json::Value properties = Json::Value::null);
+            void UpdateDeviceStateAsync(NetworkCallback callback, std::string device_id, std::string context, Json::Value properties = Json::Value::null);
 
             /** Updates collections, used for virtual currencies or collections.
 
@@ -163,6 +169,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse UpdateCollection(std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id = "", std::string device_id = "");
+            void UpdateCollectionAsync(NetworkCallback callback, std::string name, double balance, double balance_delta, bool is_currency, std::string context, std::string user_id = "", std::string device_id = "");
 
             /** Records purchases, used for real currencies.
 
@@ -181,6 +188,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             SplytResponse RecordPurchase(std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string user_id = "", std::string device_id = "");
+            void RecordPurchaseAsync(NetworkCallback callback, std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string user_id = "", std::string device_id = "");
     };
 
     /** Initialize the Splyt SDK.

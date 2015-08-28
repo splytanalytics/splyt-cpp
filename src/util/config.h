@@ -29,6 +29,9 @@ namespace splytapi
             //Enables use of async calls.
             static bool kNetworkEnableThreading;
 
+            //Enables a graceful shut down for thread task queue, if enabled the async thread will finish all tasks before stopping.
+            static bool kNetworkEnableGracefulShutdown;
+
             //Splyt API host. -- Only enterprise customers need this. Ex: https://data.splyt.com
             static std::string kNetworkHost;
 

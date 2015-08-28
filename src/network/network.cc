@@ -89,7 +89,9 @@ namespace splytapi
         bool parsingSuccessful = reader.parse(str_response, root);
 
         if (parsingSuccessful) {
-            Log::Info("RESPONSE: " + root.toStyledString());
+            if (Config::kDebugLog) {
+                Log::Info("RESPONSE: " + root.toStyledString());
+            }
 
             int error_code = root.get("error", -1).asInt();
             bool success = (error_code == kErrorSuccess);

@@ -40,6 +40,7 @@ namespace splytapi
 
     class Tuning
     {
+        friend class Network;
         private:
             Splyt* s;
             std::map< std::string, std::map<std::string, TuningValue*> > users_value_cache;
@@ -81,13 +82,13 @@ namespace splytapi
                 @param std::string default_value
                 @param std::string user_id - Optional.
                 @param std::string device_id - Optional.
+                @param std::string context -Optional.
 
                 @return SplytResponse
                 @throws splyt_exception
             */
-            LIBSPLYT_API SplytResponse RecordValue(std::string name, std::string default_value, std::string user_id = "", std::string device_id = "");
-
-            friend class Network;
+            LIBSPLYT_API SplytResponse RecordValue(std::string name, std::string default_value, std::string user_id = "", std::string device_id = "", std::string context = "defaultContext");
+            LIBSPLYT_API void RecordValueAsync(NetworkCallback callback, std::string name, std::string default_value, std::string user_id = "", std::string device_id = "", std::string context = "defaultContext");
     };
 }
 #endif  // SPLYT_TUNING_H_

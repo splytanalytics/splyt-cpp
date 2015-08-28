@@ -173,7 +173,7 @@ namespace splytapi
         return resp;
     }
 
-    SplytResponse Tuning::RecordValue(std::string name, std::string default_value, std::string user_id, std::string device_id)
+    SplytResponse Tuning::RecordValue(std::string name, std::string default_value, std::string user_id, std::string device_id, std::string ncontext)
     {
         Json::Value json;
 
@@ -184,8 +184,21 @@ namespace splytapi
         json.append(name);
         json.append(default_value);
 
-        SplytResponse resp = s->GetNetwork()->Call("tuner_recordUsed", json);
+        SplytResponse resp = s->GetNetwork()->Call("tuner_recordUsed", json, ncontext);
         return resp;
+    }
+    void Tuning::RecordValueAsync(NetworkCallback callback, std::string name, std::string default_value, std::string user_id, std::string device_id, std::string ncontext)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        s->AppendUD(&json, user_id, device_id);
+        json.append(name);
+        json.append(default_value);
+
+        s->thread_manager->PushTask(callback, "tuner_recordUsed", json, ncontext);
     }
 
     std::string Tuning::GetEntityTypeString(EntityType entity_type)

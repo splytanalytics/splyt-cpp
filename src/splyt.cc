@@ -13,9 +13,8 @@ namespace splytapi
         transaction = new Transaction(this);
         tuning = new Tuning(this, json);
 
-        if (Config::kNetworkEnableThreading) {
-            thread_manager = new ThreadManager();
-        }
+
+        thread_manager = new ThreadManager(network);
     }
 
     void Splyt::AppendUD(Json::Value* json, std::string nuser_id, std::string ndevice_id)
@@ -64,7 +63,6 @@ namespace splytapi
         SplytResponse resp = network->Call("datacollector_newUser", json, ncontext);
         return HandleResponse("datacollector_newUser", resp);
     }
-
     void Splyt::NewUserAsync(NetworkCallback callback, std::string nuser_id, std::string ncontext)
     {
         Json::Value json;
@@ -75,10 +73,7 @@ namespace splytapi
         json.append(nuser_id);
         json.append(Json::Value::null);
 
-        //SplytResponse resp = network->Call("datacollector_newUser", json, ncontext);
-
-        this->thread_manager->PushTask("datacollector_newUser", json, ncontext);
-        //this->NewUser(nuser_id, ncontext);
+        this->thread_manager->PushTask(callback, "datacollector_newUser", json, ncontext);
     }
 
     SplytResponse Splyt::NewDevice(std::string ndevice_id, std::string ncontext)
@@ -94,6 +89,18 @@ namespace splytapi
         SplytResponse resp = network->Call("datacollector_newDevice", json, ncontext);
         return HandleResponse("datacollector_newDevice", resp);
     }
+    void Splyt::NewDeviceAsync(NetworkCallback callback, std::string ndevice_id, std::string ncontext)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(Json::Value::null);
+        json.append(ndevice_id);
+
+        this->thread_manager->PushTask(callback, "datacollector_newDevice", json, ncontext);
+    }
 
     SplytResponse Splyt::NewUserChecked(std::string nuser_id, std::string ncontext)
     {
@@ -108,6 +115,18 @@ namespace splytapi
         SplytResponse resp = network->Call("datacollector_newUserChecked", json, ncontext);
         return HandleResponse("datacollector_newUserChecked", resp);
     }
+    void Splyt::NewUserCheckedAsync(NetworkCallback callback, std::string nuser_id, std::string ncontext)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(nuser_id);
+        json.append(Json::Value::null);
+
+        this->thread_manager->PushTask(callback, "datacollector_newUserChecked", json, ncontext);
+    }
 
     SplytResponse Splyt::NewDeviceChecked(std::string ndevice_id, std::string ncontext)
     {
@@ -121,6 +140,18 @@ namespace splytapi
 
         SplytResponse resp = network->Call("datacollector_newDeviceChecked", json, ncontext);
         return HandleResponse("datacollector_newDeviceChecked", resp);
+    }
+    void Splyt::NewDeviceCheckedAsync(NetworkCallback callback, std::string ndevice_id, std::string ncontext)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(Json::Value::null);
+        json.append(ndevice_id);
+
+        this->thread_manager->PushTask(callback, "datacollector_newDeviceChecked", json, ncontext);
     }
 
     SplytResponse Splyt::UpdateUserState(std::string nuser_id, std::string ncontext, Json::Value nproperties)
@@ -137,6 +168,19 @@ namespace splytapi
         SplytResponse resp = network->Call("datacollector_updateUserState", json, ncontext);
         return HandleResponse("datacollector_updateUserState", resp);
     }
+    void Splyt::UpdateUserStateAsync(NetworkCallback callback, std::string nuser_id, std::string ncontext, Json::Value nproperties)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(nuser_id);
+        json.append(Json::Value::null);
+        json.append(nproperties);
+
+        this->thread_manager->PushTask(callback, "datacollector_updateUserState", json, ncontext);
+    }
 
     SplytResponse Splyt::UpdateDeviceState(std::string ndevice_id, std::string ncontext, Json::Value nproperties)
     {
@@ -151,6 +195,19 @@ namespace splytapi
 
         SplytResponse resp = network->Call("datacollector_updateDeviceState", json, ncontext);
         return HandleResponse("datacollector_updateDeviceState", resp);
+    }
+    void Splyt::UpdateDeviceStateAsync(NetworkCallback callback, std::string ndevice_id, std::string ncontext, Json::Value nproperties)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        json.append(Json::Value::null);
+        json.append(ndevice_id);
+        json.append(nproperties);
+
+        this->thread_manager->PushTask(callback, "datacollector_updateDeviceState", json, ncontext);
     }
 
     SplytResponse Splyt::UpdateCollection(std::string nname, double nbalance, double nbalance_delta, bool nis_currency, std::string ncontext, std::string nuser_id, std::string ndevice_id)
@@ -169,6 +226,21 @@ namespace splytapi
         SplytResponse resp = network->Call("datacollector_updateCollection", json, ncontext);
         return HandleResponse("datacollector_updateCollection", resp);
     }
+    void Splyt::UpdateCollectionAsync(NetworkCallback callback, std::string nname, double nbalance, double nbalance_delta, bool nis_currency, std::string ncontext, std::string nuser_id, std::string ndevice_id)
+    {
+        Json::Value json;
+
+        std::string ts = Util::GetTimestampStr();
+        json.append(ts);
+        json.append(ts);
+        AppendUD(&json, nuser_id, ndevice_id);
+        json.append(nname);
+        json.append(nbalance);
+        json.append(nbalance_delta);
+        json.append(nis_currency);
+
+        this->thread_manager->PushTask(callback, "datacollector_updateCollection", json, ncontext);
+    }
 
     SplytResponse Splyt::RecordPurchase(std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string nuser_id, std::string ndevice_id)
     {
@@ -183,6 +255,20 @@ namespace splytapi
         properties["itemName"] = item_name;
 
         return this->transaction->BeginEnd(name, "purchase", result, context, nuser_id, ndevice_id, properties);
+    }
+    void Splyt::RecordPurchaseAsync(NetworkCallback callback, std::string name, double price, std::string currency_code, std::string result, std::string offer_id, std::string point_of_sale, std::string item_name, std::string context, std::string nuser_id, std::string ndevice_id)
+    {
+        Json::Value properties;
+
+        Json::Value currency_json;
+        currency_json[currency_code] = price;
+        properties["price"] = currency_json;
+
+        properties["offerId"] = offer_id;
+        properties["pointOfSale"] = point_of_sale;
+        properties["itemName"] = item_name;
+
+        this->transaction->BeginEndAsync(callback, name, "purchase", result, context, nuser_id, ndevice_id, properties);
     }
 
     Splyt* Init(std::string customer_id, std::string user_id, std::string device_id, std::string context) {
@@ -221,6 +307,9 @@ namespace splytapi
     Splyt::~Splyt()
     {
         Log::Info("Freeing Splyt memory.");
+        delete thread_manager;
+        thread_manager = NULL;
+
         delete network;
         network = NULL;
 
@@ -229,9 +318,6 @@ namespace splytapi
 
         delete tuning;
         tuning = NULL;
-
-        delete thread_manager;
-        thread_manager = NULL;
         Log::Info("Splyt memory freed.");
     }
 

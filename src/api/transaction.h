@@ -31,6 +31,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             LIBSPLYT_API SplytResponse Begin(std::string transaction_id, std::string category, int timeout, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            LIBSPLYT_API void BeginAsync(NetworkCallback callback, std::string transaction_id, std::string category, int timeout, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
 
             /** Update an existing transaction.
 
@@ -46,6 +47,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             LIBSPLYT_API SplytResponse Update(std::string transaction_id, std::string category, double progress, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            LIBSPLYT_API void UpdateAsync(NetworkCallback callback, std::string transaction_id, std::string category, double progress, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
 
             /** End an existing transaction.
 
@@ -61,6 +63,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             LIBSPLYT_API SplytResponse End(std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            LIBSPLYT_API void EndAsync(NetworkCallback callback, std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
 
             /** Begin and end new transaction.
 
@@ -76,6 +79,7 @@ namespace splytapi
                 @throws splyt_exception
             */
             LIBSPLYT_API SplytResponse BeginEnd(std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
+            LIBSPLYT_API void BeginEndAsync(NetworkCallback callback, std::string transaction_id, std::string category, std::string result, std::string context, std::string user_id = "", std::string device_id = "", Json::Value properties = Json::Value::null);
     };
 }
 #endif  // SPLYT_TRANSACTION_H_

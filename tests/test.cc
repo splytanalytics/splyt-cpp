@@ -62,6 +62,19 @@ void DeleteSplyt(splytapi::Splyt* splyt)
     delete splyt;
 }
 
+bool async_test_error = false;
+std::string async_test_error_message = "";
+void TestCallback(splytapi::SplytResponse response)
+{
+    if (!response.IsSuccessful()) {
+        //Log("ASYNC CALLBACK FAILURE: " + response.GetErrorMessage());
+        if (!async_test_error) {
+            async_test_error_message = response.GetErrorMessage();
+            async_test_error = true;
+        }
+    }
+}
+
 namespace tests
 {
     static int successes = 0;
@@ -80,21 +93,23 @@ namespace tests
     {
         splytapi::Splyt* splyt = InitSplyt();
 
-        splyt->NewUserAsync(NULL, "testuser", "testContext");
-        /*
-        splyt->NewUserAsync(NULL, "testuser", "testContext");
-        splyt->NewUserAsync(NULL, "testuser", "testContext");
-        splyt->NewUserAsync(NULL, "testuser", "testContext");
-        splyt->NewUserAsync(NULL, "testuser", "testContext");
-        */
-
-        /*
         AssertJsonStringEquals(splyt->NewUser("testuser", "testContext").GetContent()["datacollector_newUser"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->NewDevice("testdevice", "testContext").GetContent()["datacollector_newDevice"], "description", "(Success) ", __LINE__);
 
         AssertJsonStringEquals(splyt->NewUserChecked("testuser", "testContext").GetContent()["datacollector_newUser"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->NewDeviceChecked("testdevice", "testContext").GetContent()["datacollector_newDevice"], "description", "(Success) ", __LINE__);
-        */
+
+        DeleteSplyt(splyt);
+    }
+    void EntityAsyncTest()
+    {
+        splytapi::Splyt* splyt = InitSplyt();
+
+        splyt->NewUserAsync(&TestCallback, "testuser", "testContext");
+        splyt->NewDeviceAsync(&TestCallback, "testdevice", "testContext");
+
+        splyt->NewUserCheckedAsync(&TestCallback, "testuser", "testContext");
+        splyt->NewDeviceCheckedAsync(&TestCallback, "testdevice", "testContext");
 
         DeleteSplyt(splyt);
     }
@@ -111,6 +126,18 @@ namespace tests
 
         DeleteSplyt(splyt);
     }
+    void EntityStatesAsyncTest()
+    {
+        splytapi::Splyt* splyt = InitSplyt();
+
+        Json::Value properties;
+        properties["testprop"] = "testvalue";
+
+        splyt->UpdateUserStateAsync(&TestCallback, "testuser", "testContext", properties);
+        splyt->UpdateDeviceStateAsync(&TestCallback, "testdevice", "testContext", properties);
+
+        DeleteSplyt(splyt);
+    }
 
     void CollectionTest()
     {
@@ -118,6 +145,15 @@ namespace tests
 
         AssertJsonStringEquals(splyt->UpdateCollection("testcollection", 100, -10, false, "testContext").GetContent()["datacollector_updateCollection"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->RecordPurchase("testpurchase", 19.99, "USD", "success", "offer1", "pointofsale1", "Cool Gear", "testContext").GetContent()["datacollector_endTransaction"], "description", "(Success) ", __LINE__);
+
+        DeleteSplyt(splyt);
+    }
+    void CollectionAsyncTest()
+    {
+        splytapi::Splyt* splyt = InitSplyt();
+
+        splyt->UpdateCollectionAsync(&TestCallback, "testcollection", 100, -10, false, "testContext");
+        splyt->RecordPurchaseAsync(&TestCallback, "testpurchase", 19.99, "USD", "success", "offer1", "pointofsale1", "Cool Gear", "testContext");
 
         DeleteSplyt(splyt);
     }
@@ -130,6 +166,17 @@ namespace tests
         AssertJsonStringEquals(splyt->transaction->Update("testtransaction", "testcategory", 32.23, "testContext").GetContent()["datacollector_updateTransaction"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->transaction->End("testtransaction", "testcategory", "success", "testContext").GetContent()["datacollector_endTransaction"], "description", "(Success) ", __LINE__);
         AssertJsonStringEquals(splyt->transaction->BeginEnd("begin-end_testtransaction", "begin-end_testcategory", "success", "testContext").GetContent()["datacollector_endTransaction"], "description", "(Success) ", __LINE__);
+
+        DeleteSplyt(splyt);
+    }
+    void TransactionAsyncTest()
+    {
+        splytapi::Splyt* splyt = InitSplyt();
+
+        splyt->transaction->BeginAsync(&TestCallback, "testtransaction", "testcategory", 3600, "testContext");
+        splyt->transaction->UpdateAsync(&TestCallback, "testtransaction", "testcategory", 32.23, "testContext");
+        splyt->transaction->EndAsync(&TestCallback, "testtransaction", "testcategory", "success", "testContext");
+        splyt->transaction->BeginEndAsync(&TestCallback, "begin-end_testtransaction", "begin-end_testcategory", "success", "testContext");
 
         DeleteSplyt(splyt);
     }
@@ -154,14 +201,28 @@ namespace tests
 
         DeleteSplyt(splyt);
     }
+    void TuningAsyncTest()
+    {
+        splytapi::Splyt* splyt = InitSplyt();
+
+        splyt->tuning->RecordValueAsync(&TestCallback, "testval", "default", "testuser");
+
+        DeleteSplyt(splyt);
+    }
 }
 
 
 void RunTest(void (*f)(), std::string name)
 {
+    async_test_error = false;
+    async_test_error_message = "";
+
     try {
         Log("Starting test " + name + ".");
         (*f)();
+        if (async_test_error) {
+            throw std::runtime_error(async_test_error_message);
+        }
         Log(name + " SUCCESS");
         tests::successes++;
     } catch (std::runtime_error e) {
@@ -172,17 +233,28 @@ void RunTest(void (*f)(), std::string name)
 
 int main()
 {
-    splytapi::Config::kDebugLog = true;
+    //splytapi::Config::kDebugLog = true;
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000; //Tuning variable cache TTL set to 10 seconds.
 
     Log("##### RUNNING UNIT TESTS #####");
-    //RunTest(tests::InitTest, "Init Test");
+
+    RunTest(tests::InitTest, "Init Test");
+
     RunTest(tests::EntityTest, "Entity Test");
-    //RunTest(tests::EntityStatesTest, "Entity States Test");
-    //RunTest(tests::CollectionTest, "Collection Test");
-    //RunTest(tests::TransactionTest, "Transaction Test");
-    //RunTest(tests::TuningTest, "Tuning Test");
+    RunTest(tests::EntityAsyncTest, "Entity Async Test");
+
+    RunTest(tests::EntityStatesTest, "Entity States Test");
+    RunTest(tests::EntityStatesAsyncTest, "Entity States Async Test");
+
+    RunTest(tests::CollectionTest, "Collection Test");
+    RunTest(tests::CollectionAsyncTest, "Collection Async Test");
+
+    RunTest(tests::TransactionTest, "Transaction Test");
+    RunTest(tests::TransactionAsyncTest, "Transaction Async Test");
+
+    RunTest(tests::TuningTest, "Tuning Test");
+    RunTest(tests::TuningAsyncTest, "Tuning Async Test");
 
     std::string info = to_string(tests::successes) + " TESTS PASSED - " + to_string(tests::failures) + " TESTS FAILED #####";
     if (tests::failures > 0) {
