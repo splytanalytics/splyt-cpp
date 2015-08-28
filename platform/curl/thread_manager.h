@@ -51,6 +51,7 @@ namespace splytapi
 
             void PushTask(NetworkCallback callback, std::string sub_path, Json::Value content, std::string context);
             bool IsRunning();
+            boost::mutex* GetMutex();
             Network* GetNetwork();
     };
 }

@@ -233,7 +233,7 @@ void RunTest(void (*f)(), std::string name)
 
 int main()
 {
-    splytapi::Config::kDebugLog = true;
+    //splytapi::Config::kDebugLog = true;
     splytapi::Config::kNetworkHost = "https://data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000; //Tuning variable cache TTL set to 10 seconds.
 
