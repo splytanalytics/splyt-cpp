@@ -14,7 +14,7 @@ $(shell mkdir -p bin)
 all:
 
 unix: $(SRC)
-	$(CXX) $(PARAM) -fPIC -Wall -Wno-unknown-pragmas -shared $(INCLUDE) $^ -o lib/libsplyt.so -lcurl
+	$(CXX) $(PARAM) -fPIC -Wall -Wno-unknown-pragmas -shared $(INCLUDE) $^ -o lib/libsplyt.so -lcurl -lboost_system -lboost_thread
 
 win: $(SRC)
 	$(CXX) $(PARAM) $(INCLUDE) -Iprojects/visual-studio/vendor -DLIBSPLYT_EXPORTS -DWIN32 -DJSON_DLL_BUILD -DSNPRINTF_PATCH -c $^ -Lprojects/visual-studio/vendor/curl -lcurl
