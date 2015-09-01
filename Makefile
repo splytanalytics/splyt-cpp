@@ -19,7 +19,7 @@ unix: $(SRC)
 	$(CXX) $(PARAM) -fPIC -Wall -Wno-unknown-pragmas -shared $(INCLUDE) $^ -o lib/libsplyt.so -lcurl -lboost_system -lboost_thread
 
 win: $(SRC) $(BOOST_SRC)
-	$(CXX) $(PARAM) $(INCLUDE) -Iprojects/visual-studio/vendor -DLIBSPLYT_EXPORTS -DWIN32 -DJSON_DLL_BUILD -DBOOST_ARCHIVE_SOURCE -DBOOST_ALL_DYN_LINK -DBOOST_DLL_EXPORT -c $^ -Lprojects/visual-studio/vendor/curl -lcurl
+	$(CXX) $(PARAM) $(INCLUDE) -Iprojects/visual-studio/vendor -DLIBSPLYT_EXPORTS -DWIN32 -DJSON_DLL_BUILD -DBOOST_ARCHIVE_SOURCE -DBOOST_ALL_DYN_LINK -c $^ -Lprojects/visual-studio/vendor/curl -lcurl
 	$(CXX) $(PARAM) -shared $(INCLUDE) -Iprojects/visual-studio/vendor -o lib/libsplyt.dll $(OBJECTS) $(BOOST_OBJECTS) -Lprojects/visual-studio/vendor/curl -lcurl -lcurldll -Wl,--out-implib,lib/libsplyt.a
 	rm *.o
 	cp lib/libsplyt.dll bin/libsplyt.dll

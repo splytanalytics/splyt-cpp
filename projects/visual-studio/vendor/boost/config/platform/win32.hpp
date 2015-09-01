@@ -28,7 +28,7 @@
 #ifndef BOOST_SYMBOL_EXPORT
 #  define BOOST_HAS_DECLSPEC
 #  define BOOST_SYMBOL_EXPORT __declspec(dllexport)
-#  define BOOST_SYMBOL_IMPORT __declspec(dllimport)
+#  define BOOST_SYMBOL_IMPORT __declspec(dllexport)
 #endif
 
 #if defined(__MINGW32__) && ((__MINGW32_MAJOR_VERSION > 2) || ((__MINGW32_MAJOR_VERSION == 2) && (__MINGW32_MINOR_VERSION >= 0)))
