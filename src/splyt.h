@@ -34,7 +34,7 @@
 #include "network/network.h"
 
 #define SPLYT_SDK_NAME "cpp"
-#define SPLYT_SDK_VERSION "5.2.2"
+#define SPLYT_SDK_VERSION "5.2.6"
 
 namespace splytapi
 {
