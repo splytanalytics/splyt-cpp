@@ -10,13 +10,18 @@ OBJECTS = $(addprefix ,$(notdir $(OBJECTSP1:.cpp=.o)))
 BOOST_OBJECTS = $(addprefix ,$(notdir $(BOOST_SRC:.cpp=.o)))
 LIB_PATH = $(shell pwd)/lib
 
+OS = $(shell uname -s)
+ifeq ($(OS),Darwin)
+BOOST_SUFFIX = -mt
+endif
+
 $(shell mkdir -p lib)
 $(shell mkdir -p bin)
 
 all:
 
 unix: $(SRC)
-	$(CXX) $(PARAM) -fPIC -Wall -Wno-unknown-pragmas -shared $(INCLUDE) $^ -o lib/libsplyt.so -lcurl -lboost_system -lboost_thread
+	$(CXX) $(PARAM) -fPIC -Wall -Wno-unknown-pragmas -shared $(INCLUDE) $^ -o lib/libsplyt.so -lcurl -lboost_system -lboost_thread$(BOOST_SUFFIX)
 
 win: $(SRC) $(BOOST_SRC)
 	$(CXX) $(PARAM) $(INCLUDE) -Iprojects/visual-studio/vendor -DLIBSPLYT_EXPORTS -DWIN32 -DJSON_DLL_BUILD -DBOOST_ARCHIVE_SOURCE -DBOOST_ALL_DYN_LINK -c $^ -Lprojects/visual-studio/vendor/curl -lcurl
@@ -25,7 +30,7 @@ win: $(SRC) $(BOOST_SRC)
 	cp lib/libsplyt.dll bin/libsplyt.dll
 
 unix-tests: unix tests/test.cc
-	$(CXX) $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt -lboost_system -lboost_thread
+	$(CXX) $(INCLUDE) tests/test.cc -o bin/test.o -Llib -lsplyt -lboost_system -lboost_thread$(BOOST_SUFFIX)
 	export LD_LIBRARY_PATH="$(LIB_PATH)"; ./bin/test.o
 
 win-tests: win tests/test.cc

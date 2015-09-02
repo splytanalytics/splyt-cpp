@@ -6,10 +6,7 @@ compiler:
 addons:
   apt:
     packages:
-      - libboost-all-dev
-
-before_install:
-
+      - libboost-thread-dev
 
 script: make unix-tests
 
@@ -20,7 +17,7 @@ branches:
 
 os:
   - linux
-#  - osx
+  - osx
 
 cache:
   - apt
