@@ -7,7 +7,7 @@ namespace splytapi
 {
     //Configuration defaults.
     bool Config::kDebugLog = false;
-    bool Config::kNetworkEnableThreading = true;
+    bool Config::kNetworkEnableThreading = false;
     bool Config::kNetworkEnableGracefulShutdown = true;
     std::string Config::kNetworkHost = "https://data.splyt.com";
 	bool Config::kNetworkEnableVerifyPeer = true;

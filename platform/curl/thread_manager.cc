@@ -18,12 +18,14 @@ namespace splytapi
 
     ThreadManager::~ThreadManager()
     {
-        splytapi::Log::Info("Stopping and joining thread.");
-        running = false;
-        queue_thread->join();
-        splytapi::Log::Info("Freeing thread memory.");
-        delete queue_thread;
-        queue_thread = NULL;
+        if (Config::kNetworkEnableThreading) {
+            splytapi::Log::Info("Stopping and joining thread.");
+            running = false;
+            queue_thread->join();
+            splytapi::Log::Info("Freeing thread memory.");
+            delete queue_thread;
+            queue_thread = NULL;
+        }
     }
 
     void ThreadManager::RunThread(ThreadManager* tm, std::vector<Task*>* task_queue)
