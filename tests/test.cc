@@ -67,7 +67,6 @@ std::string async_test_error_message = "";
 void TestCallback(splytapi::SplytResponse response)
 {
     if (!response.IsSuccessful()) {
-        //Log("ASYNC CALLBACK FAILURE: " + response.GetErrorMessage());
         if (!async_test_error) {
             async_test_error_message = response.GetErrorMessage();
             async_test_error = true;
