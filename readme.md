@@ -155,6 +155,8 @@ splyt->transaction->BeginAsync(NULL, "testtransaction", "testcategory", 3600, "t
 ```
 Any errors that occur will be stored in the splytapi::SplytResponse instance that is passed to the callback, exceptions will only be thrown for configuration issues.
 
+**NOTE:** The kNetworkEnableThreading configuration variable must be set to true for any asynchronous calls to be made.
+
 ### Errors and Exceptions
 All synchronous API functions throw a splyt_exception when an error has occurred, these exceptions contain a SplytResponse holding error information needed to understand the issue. An example for handling these exceptions is shown below.
 ```c++
@@ -214,9 +216,11 @@ This will build the needed DLL and then include/build the test files. The execut
 # API Functions
 A list of the API functions and their use currently implemented in the SDK. All of these functions, with the exception of Init, require an instance of the Splyt class to be used. An instance of said class can be aquired through the Init function.
 
-**NOTE:** All API functions, with the exception of Init, return a SplytResponse. Information on how to handle this response is shown in the [Responses section](#responses).
+**NOTE:** The kNetworkEnableThreading configuration variable must be set to true for any asynchronous calls to be made.
 
-**NOTE:** All API functions throw an splyt_exception when an error occurs. Information on how to handle this is shown in the [Errors and Exceptions section](#errors-and-exceptions).
+**NOTE:** All synchronous API functions, with the exception of Init, return a SplytResponse. Information on how to handle this response is shown in the [Responses section](#responses).
+
+**NOTE:** All synchronous API functions throw an splyt_exception when an error occurs. Information on how to handle this is shown in the [Errors and Exceptions section](#errors-and-exceptions).
 
 ## General
 Functions that do not fall under a specific category.
