@@ -10,7 +10,15 @@ namespace splytapi
 
     }
 
-    void OverrideHttpInterface::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+    void OverrideHttpInterface::OnResponseReceivedAsync(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful, NetworkCallback callback)
+    {
+        FString UE4Str = Response->GetContentAsString();
+        std::string content(TCHAR_TO_UTF8(*UE4Str));
+        SplytResponse response = Network::ParseResponse(content);
+        callback(response);
+    }
+
+    void OverrideHttpInterface::OnResponseReceivedSync(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
     {
         FString UE4Str = Response->GetContentAsString();
         std::string content(TCHAR_TO_UTF8(*UE4Str));
@@ -19,7 +27,7 @@ namespace splytapi
         this->response_received = true;
     }
 
-    std::string OverrideHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string stdcontent, long timeout)
+    std::string OverrideHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string stdcontent, long timeout, NetworkCallback callback)
     {
         //Construct URL.
         std::string stdfull_url = url + path;
@@ -52,8 +60,23 @@ namespace splytapi
         HttpRequest->SetURL(full_url);
         HttpRequest->SetVerb(TEXT("POST"));
         HttpRequest->SetContentAsString(content);
-        HttpRequest->OnProcessRequestComplete().BindRaw(this, &OverrideHttpInterface::OnResponseReceived);
-        if (HttpRequest->ProcessRequest()) {
+        if (callback != NULL) {
+            HttpRequest->OnProcessRequestComplete().BindRaw(this, &OverrideHttpInterface::OnResponseReceivedAsync, callback);
+        } else {
+            HttpRequest->OnProcessRequestComplete().BindRaw(this, &OverrideHttpInterface::OnResponseReceivedSync);
+        }
+
+        bool process_result = HttpRequest->ProcessRequest();
+        if (!process_result) {
+            throw std::runtime_error("Failed to process HTTP request.");
+        }
+
+        if (callback != NULL) {
+            this->http_response = "";
+            return this->http_response;
+        }
+
+        if (process_result) {
             double ntimeout = FPlatformTime::Seconds() + timeout;
             double last_tick = FPlatformTime::Seconds();
             while (!this->response_received) {
@@ -67,8 +90,6 @@ namespace splytapi
                     throw std::runtime_error("HTTP request timed out.");
                 }
             }
-        } else {
-            throw std::runtime_error("Failed to process HTTP request.");
         }
 
         if (!this->response_valid || this->http_response.empty()) {

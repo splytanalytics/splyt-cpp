@@ -21,13 +21,13 @@
 #define LIBSPLYT_API
 #endif
 
+#include "override_http_interface.h"
 #include "util/util.h"
 #include "util/config.h"
 #include "util/log.h"
 #include "network/splyt_response.h"
 #include "util/splyt_exception.h"
 #include "network/http_interface.h"
-#include "override_http_interface.h"
 #include "thread_manager.h"
 #include "api/tuning.h"
 #include "api/transaction.h"

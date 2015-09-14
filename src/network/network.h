@@ -16,8 +16,6 @@ namespace splytapi
         private:
             Splyt* s;
             HttpInterface* httpint;
-            std::string InterpretError(int code);
-            SplytResponse ParseResponse(std::string str_response);
 
         public:
             Network(Splyt* sp);
@@ -40,7 +38,10 @@ namespace splytapi
 
                 @return SplytResponse - Object that contains error data or the JSON content.
             */
-            SplytResponse Call(std::string path, Json::Value content, std::string context = "defaultContext");
+            SplytResponse Call(std::string path, Json::Value content, std::string context = "defaultContext", NetworkCallback callback = NULL);
+
+            static SplytResponse ParseResponse(std::string str_response);
+            static std::string InterpretError(int code);
     };
 }
 #endif  // SPLYT_NETWORK_H_

@@ -40,7 +40,7 @@ namespace splytapi
         return resp.GetContent();
     }
 
-    SplytResponse Network::Call(std::string sub_path, Json::Value content, std::string context)
+    SplytResponse Network::Call(std::string sub_path, Json::Value content, std::string context, NetworkCallback callback)
     {
         if(!this->httpint) {
             splytapi::ThrowDummyResponseException("No HTTP implementation available. Did you call splyt::Init()?");
@@ -72,7 +72,7 @@ namespace splytapi
         std::string str_response = "";
 
         try {
-            str_response = this->httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content), Config::kNetworkTimeout);
+            str_response = this->httpint->Post(Config::kNetworkHost, path + query, headers, 2, fast_writer.write(content), Config::kNetworkTimeout, callback);
         } catch (std::runtime_error e) {
             std::string err = e.what();
             splytapi::ThrowDummyResponseException("Network Error: " + err);

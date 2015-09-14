@@ -22,7 +22,7 @@ namespace splytapi
         public:
             OverrideHttpInterface();
             ~OverrideHttpInterface(){}
-            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout);
+            virtual std::string Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout, NetworkCallback callback = NULL);
     };
 }
 #endif  // SPLYT_CURL_HTTP_INTERFACE_H_

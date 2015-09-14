@@ -15,7 +15,7 @@ namespace splytapi
         return size*count;
     }
 
-    std::string OverrideHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout)
+    std::string OverrideHttpInterface::Post(std::string url, std::string path, std::string headers[], int header_count, std::string content, long timeout, NetworkCallback callback)
     {
         CURL* curl;
         CURLcode res;
