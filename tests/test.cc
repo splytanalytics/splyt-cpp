@@ -144,6 +144,8 @@ void RunTest(void (*f)(), std::string name)
         }
         //Log(name + " SUCCESS");
         tests::successes++;
+
+
     } catch (std::runtime_error e) {
         Log(name + " FAILURE: " + e.what());
         tests::failures++;
@@ -158,6 +160,7 @@ int main()
     //splytapi::Config::kNetworkEnableThreading = true;
     splytapi::Config::kNetworkHost = "https://splyt-test9-data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000; //Tuning variable cache TTL set to 10 seconds.
+    splytapi::Config::kNetworkTimeout = 50;
 
     Log("##### RUNNING UNIT TESTS #####");
 
