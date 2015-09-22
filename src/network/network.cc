@@ -3,8 +3,29 @@
 */
 #include "network/network.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+
+//Sleep function for testing caching.
+void Sleep(long value)
+{
+    splytapi::Log::Info("SLEEPING...");
+
+    #ifdef _WIN32
+        Sleep(value);
+    #else
+        usleep(value * 100);
+    #endif
+}
+#endif
+
 namespace splytapi
 {
+    int Network::stat_total_datapoints = 0;
+    std::map<std::string, int> Network::stat_datapoint_list;
+
     Network::Network(Splyt* sp)
     {
         s = sp;
@@ -79,6 +100,17 @@ namespace splytapi
         }
 
         SplytResponse resp = Network::ParseResponse(str_response);
+
+        //Network statistics.
+        Network::stat_total_datapoints++;
+        if (stat_datapoint_list.count(sub_path)) {
+            stat_datapoint_list[sub_path]++;
+        } else {
+            stat_datapoint_list[sub_path] = 1;
+        }
+
+        //Sleep(1000);
+
         return resp;
     }
 

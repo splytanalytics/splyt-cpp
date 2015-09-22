@@ -18,6 +18,9 @@ namespace splytapi
             HttpInterface* httpint;
 
         public:
+            static int stat_total_datapoints;
+            static std::map<std::string, int> stat_datapoint_list;
+
             Network(Splyt* sp);
             ~Network();
 
