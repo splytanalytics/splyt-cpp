@@ -136,7 +136,7 @@ void RunTest(void (*f)(), std::string name)
     async_test_error_message = "";
 
     try {
-        tests::splyt = InitSplyt();
+        tests::splyt = splytapi::Init("emr-test-test", "testuser" + random_string(8), "testdevice" + random_string(8), "testContext");
         //Log("Starting test " + name + ".");
         (*f)();
         if (async_test_error) {
@@ -144,14 +144,13 @@ void RunTest(void (*f)(), std::string name)
         }
         //Log(name + " SUCCESS");
         tests::successes++;
-
-
     } catch (std::runtime_error e) {
         Log(name + " FAILURE: " + e.what());
         tests::failures++;
     }
 
-    DeleteSplyt(tests::splyt);
+    delete tests::splyt;
+    tests::splyt = NULL;
 }
 
 int main()
@@ -160,7 +159,7 @@ int main()
     //splytapi::Config::kNetworkEnableThreading = true;
     splytapi::Config::kNetworkHost = "https://splyt-test9-data.splyt.com";
     splytapi::Config::kTuningCacheTtl = 10000; //Tuning variable cache TTL set to 10 seconds.
-    splytapi::Config::kNetworkTimeout = 50;
+    splytapi::Config::kNetworkTimeout = 10;
 
     Log("##### RUNNING UNIT TESTS #####");
 
